@@ -7,19 +7,21 @@ import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.Table;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Entity
-@Getter
+@Table(name = "\"User\"")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 public class User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Getter
     Long id;
 
     @Embedded
@@ -32,6 +34,7 @@ public class User {
     UserPassword password;
 
     @Enumerated(EnumType.STRING)
+    @Getter
     Role role;
 
     public static User createCoach(UserName name, UserEmail email, UserPassword password) {
@@ -40,5 +43,21 @@ public class User {
 
     public static User createCrew(UserName name, UserEmail email, UserPassword password) {
         return new User(null, name, email, password, Role.CREW);
+    }
+
+    public boolean isSamePassword(UserPassword password) {
+        return password.equals(this.password);
+    }
+
+    public String getName() {
+        return name.getName();
+    }
+
+    public String getEmail() {
+        return email.getEmail();
+    }
+
+    public String getPassword() {
+        return password.getPassword();
     }
 }
