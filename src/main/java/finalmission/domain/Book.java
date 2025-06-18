@@ -18,6 +18,7 @@ import java.time.LocalDate;
 public class Book {
 
     private final static int MIN_TOTAL_COUNT = 1;
+    private final static int MIN_AVAILABLE_COUNT = 1;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -64,5 +65,28 @@ public class Book {
 
     public void adjustAvailableCount(int count) {
         availableCount -= count;
+    }
+
+    public void checkAvailableCount() {
+        if (this.availableCount < MIN_AVAILABLE_COUNT) {
+            throw new IllegalArgumentException("[ERROR] 해당 도서의 예약 가능 수량이 부족합니다.");
+        }
+    }
+
+    @Override
+    public String toString() {
+        return "Book{" +
+                "id=" + id +
+                ", title='" + title + '\'' +
+                ", author='" + author + '\'' +
+                ", image='" + image + '\'' +
+                ", publisher='" + publisher + '\'' +
+                ", pubdate=" + pubdate +
+                ", isbn='" + isbn + '\'' +
+                ", description='" + description + '\'' +
+                ", totalCount=" + totalCount +
+                ", availableCount=" + availableCount +
+                ", regDate=" + regDate +
+                '}';
     }
 }

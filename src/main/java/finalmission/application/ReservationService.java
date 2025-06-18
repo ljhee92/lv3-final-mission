@@ -43,10 +43,12 @@ public class ReservationService {
     public ReservationCreateResponse reserveBook(String email, ReservationCreateRequest request) {
         User user = userService.findByEmail(email);
         Book book = bookService.findById(request.bookId());
+        book.checkAvailableCount();
 
         Reservation reservationWithoutId = Reservation.createReservation(
                 user, book, request.reserveDate(), request.reserveTime()
         );
+        book.adjustAvailableCount(1);
         Reservation reservationWithId = reservationRepository.save(reservationWithoutId);
         return ReservationCreateResponse.from(reservationWithId);
     }

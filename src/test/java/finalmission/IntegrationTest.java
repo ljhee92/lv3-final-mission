@@ -239,10 +239,10 @@ public class IntegrationTest {
         LoginRequest loginRequest = new LoginRequest(duei.getEmail(), duei.getPassword());
         String token = getToken(loginRequest);
 
-        bookFixture.createBook1();
+        Book book1 = bookFixture.createBook1();
 
         ReservationCreateRequest request = new ReservationCreateRequest(
-                1L,
+                book1.getId(),
                 LocalDate.now(),
                 LocalTime.now().plusSeconds(1)
         );
@@ -257,6 +257,32 @@ public class IntegrationTest {
                 .statusCode(HttpStatus.CREATED.value())
                 .body("size()", is(5))
                 .log().all();
+    }
+
+    @Test
+    void 사용자가_예약가능수량이_0인_도서를_예약하면_예외가_발생한다() {
+        User duei = userFixture.createDuei();
+        LoginRequest loginRequest = new LoginRequest(duei.getEmail(), duei.getPassword());
+        String token = getToken(loginRequest);
+
+        Book book1 = bookFixture.createBook1();
+        reservationFixture.createReservation(duei, book1);
+        reservationFixture.createReservation(duei, book1);
+
+        ReservationCreateRequest request = new ReservationCreateRequest(
+                book1.getId(),
+                LocalDate.now(),
+                LocalTime.now().plusSeconds(1)
+        );
+
+        RestAssured.given()
+                .contentType("application/json")
+                .cookie("token", token)
+                .body(request)
+                .when()
+                .post("/reservations")
+                .then()
+                .statusCode(HttpStatus.BAD_REQUEST.value());
     }
 
     @Test
