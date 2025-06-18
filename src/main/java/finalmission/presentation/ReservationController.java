@@ -4,6 +4,7 @@ import finalmission.application.ReservationService;
 import finalmission.dto.request.LoginUser;
 import finalmission.dto.request.ReservationCreateRequest;
 import finalmission.dto.response.AvailableBookResponse;
+import finalmission.dto.response.MyReservationResponse;
 import finalmission.dto.response.ReservationCreateResponse;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
@@ -41,5 +42,13 @@ public class ReservationController {
         return ResponseEntity
                 .status(HttpStatus.CREATED)
                 .body(response);
+    }
+
+    @GetMapping("/reservations")
+    public ResponseEntity<List<MyReservationResponse>> getReservations(
+            @AuthenticationPrincipal LoginUser loginUser
+    ) {
+        List<MyReservationResponse> responses = reservationService.getReservations(loginUser.email());
+        return ResponseEntity.ok(responses);
     }
 }

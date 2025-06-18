@@ -5,6 +5,7 @@ import finalmission.domain.Reservation;
 import finalmission.domain.User;
 import finalmission.dto.request.ReservationCreateRequest;
 import finalmission.dto.response.AvailableBookResponse;
+import finalmission.dto.response.MyReservationResponse;
 import finalmission.dto.response.ReservationCreateResponse;
 import finalmission.repository.ReservationRepository;
 import org.springframework.stereotype.Service;
@@ -46,5 +47,13 @@ public class ReservationService {
         );
         Reservation reservationWithId = reservationRepository.save(reservationWithoutId);
         return ReservationCreateResponse.from(reservationWithId);
+    }
+
+    public List<MyReservationResponse> getReservations(String email) {
+        User user = userService.findByEmail(email);
+        List<Reservation> reservations = reservationRepository.findByUser_Id(user.getId());
+        return reservations.stream()
+                .map(MyReservationResponse::from)
+                .toList();
     }
 }
