@@ -14,7 +14,7 @@
 - [ ] 사용자는 본인의 예약만 수정하고 삭제할 수 있다.
 
 ### 프로그래밍 요구사항
-- [ ] H2 활용
+- [x] H2 활용
 - [ ] TDD
 - [ ] 외부 API 연동 - [네이버 도서 검색 API](https://developers.naver.com/docs/serviceapi/search/book/book.md)
 
