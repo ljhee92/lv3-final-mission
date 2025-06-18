@@ -39,13 +39,15 @@ public class Book {
 
     int totalCount;
 
+    int availableCount;
+
     LocalDate regDate;
 
     public static Book createBook(String title, String author, String image, String publisher, LocalDate pubdate,
                                   String isbn, String description, int totalCount, LocalDate regDate) {
         validateTotalCount(totalCount);
         validateRegDate(regDate);
-        return new Book(null, title, author, image, publisher, pubdate, isbn, description, totalCount, regDate);
+        return new Book(null, title, author, image, publisher, pubdate, isbn, description, totalCount, totalCount, regDate);
     }
 
     private static void validateTotalCount(int totalCount) {
@@ -58,5 +60,9 @@ public class Book {
         if (regDate.isBefore(LocalDate.now())) {
             throw new IllegalArgumentException("[ERROR] 등록일자는 현재시간 이후여야 합니다.");
         }
+    }
+
+    public void adjustAvailableCount(int count) {
+        availableCount -= count;
     }
 }

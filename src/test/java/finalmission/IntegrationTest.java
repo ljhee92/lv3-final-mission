@@ -4,6 +4,7 @@ import finalmission.domain.User;
 import finalmission.dto.request.BookCreateRequest;
 import finalmission.dto.request.LoginRequest;
 import finalmission.dto.request.LoginUser;
+import finalmission.fixture.BookFixture;
 import finalmission.fixture.UserFixture;
 import io.restassured.RestAssured;
 import org.junit.jupiter.api.BeforeEach;
@@ -31,6 +32,9 @@ public class IntegrationTest {
 
     @Autowired
     UserFixture userFixture;
+
+    @Autowired
+    BookFixture bookFixture;
 
     @BeforeEach
     void setUp() {
@@ -197,6 +201,25 @@ public class IntegrationTest {
                 .body("size()", is(10))
                 .log().all();
 
+    }
+
+    @Test
+    void 사용자가_예약가능한_도서를_조회한다() {
+        User duei = userFixture.createDuei();
+        LoginRequest loginRequest = new LoginRequest(duei.getEmail(), duei.getPassword());
+        String token = getToken(loginRequest);
+
+        bookFixture.createBook1();
+
+        RestAssured.given()
+                .contentType("application/json")
+                .cookie("token", token)
+                .when()
+                .get("/reservations/available")
+                .then()
+                .statusCode(HttpStatus.OK.value())
+                .body("size()", is(1))
+                .log().all();
     }
 
     private String getToken(LoginRequest request) {
