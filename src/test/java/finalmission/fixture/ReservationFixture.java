@@ -18,7 +18,7 @@ public class ReservationFixture {
         this.reservationRepository = reservationRepository;
     }
 
-    public Reservation createReservation1(User user, Book book) {
+    public Reservation createReservation(User user, Book book) {
         LocalDate reserveDate = LocalDate.now();
         LocalTime reserveTime = LocalTime.now().plusSeconds(1);
         Reservation reservation = Reservation.createReservation(user, book, reserveDate, reserveTime);

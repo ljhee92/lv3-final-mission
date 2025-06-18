@@ -1,11 +1,14 @@
 package finalmission;
 
 import finalmission.domain.Book;
+import finalmission.domain.Reservation;
 import finalmission.domain.User;
 import finalmission.dto.request.BookCreateRequest;
 import finalmission.dto.request.LoginRequest;
 import finalmission.dto.request.LoginUser;
 import finalmission.dto.request.ReservationCreateRequest;
+import finalmission.dto.response.AvailableBookResponse;
+import finalmission.dto.response.MyReservationResponse;
 import finalmission.fixture.BookFixture;
 import finalmission.fixture.ReservationFixture;
 import finalmission.fixture.UserFixture;
@@ -22,6 +25,7 @@ import org.springframework.test.annotation.DirtiesContext;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.List;
 
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.notNullValue;
@@ -207,7 +211,6 @@ public class IntegrationTest {
                 .statusCode(HttpStatus.CREATED.value())
                 .body("size()", is(10))
                 .log().all();
-
     }
 
     @Test
@@ -216,7 +219,8 @@ public class IntegrationTest {
         LoginRequest loginRequest = new LoginRequest(duei.getEmail(), duei.getPassword());
         String token = getToken(loginRequest);
 
-        bookFixture.createBook1();
+        Book book1 = bookFixture.createBook1();
+        List<AvailableBookResponse> responses = List.of(AvailableBookResponse.from(book1));
 
         RestAssured.given()
                 .contentType("application/json")
@@ -225,7 +229,7 @@ public class IntegrationTest {
                 .get("/reservations/available")
                 .then()
                 .statusCode(HttpStatus.OK.value())
-                .body("size()", is(1))
+                .body("size()", response -> is(responses.size()))
                 .log().all();
     }
 
@@ -262,7 +266,8 @@ public class IntegrationTest {
         String token = getToken(loginRequest);
 
         Book book1 = bookFixture.createBook1();
-        reservationFixture.createReservation1(duei, book1);
+        Reservation reservation = reservationFixture.createReservation(duei, book1);
+        List<MyReservationResponse> responses = List.of(MyReservationResponse.from(reservation));
 
         RestAssured.given()
                 .contentType("application/json")
@@ -271,7 +276,7 @@ public class IntegrationTest {
                 .get("/reservations")
                 .then()
                 .statusCode(HttpStatus.OK.value())
-                .body("size()", is(1))
+                .body("size()", response -> is(responses.size()))
                 .log().all();
     }
 
@@ -282,12 +287,12 @@ public class IntegrationTest {
         String token = getToken(loginRequest);
 
         Book book1 = bookFixture.createBook1();
-        reservationFixture.createReservation1(duei, book1);
+        Reservation reservation = reservationFixture.createReservation(duei, book1);
 
         RestAssured.given()
                 .contentType("application/json")
                 .cookie("token", token)
-                .pathParam("id", 1L)
+                .pathParam("id", reservation.getId())
                 .when()
                 .get("/reservations/{id}")
                 .then()
@@ -297,18 +302,40 @@ public class IntegrationTest {
     }
 
     @Test
+    void 사용자가_본인의_예약이_아닌_정보를_조회하면_예외가_발생한다() {
+        User duei = userFixture.createDuei();
+        LoginRequest loginRequest = new LoginRequest(duei.getEmail(), duei.getPassword());
+        String token = getToken(loginRequest);
+
+        Book book1 = bookFixture.createBook1();
+        reservationFixture.createReservation(duei, book1);
+
+        User brown = userFixture.createBrown();
+        Reservation reservationOfBrown = reservationFixture.createReservation(brown, book1);
+
+        RestAssured.given()
+                .contentType("application/json")
+                .cookie("token", token)
+                .pathParam("id", reservationOfBrown.getId())
+                .when()
+                .get("/reservations/{id}")
+                .then()
+                .statusCode(HttpStatus.NOT_FOUND.value());
+    }
+
+    @Test
     void 사용자가_자신의_예약을_연장한다() {
         User duei = userFixture.createDuei();
         LoginRequest loginRequest = new LoginRequest(duei.getEmail(), duei.getPassword());
         String token = getToken(loginRequest);
 
         Book book1 = bookFixture.createBook1();
-        reservationFixture.createReservation1(duei, book1);
+        Reservation reservation = reservationFixture.createReservation(duei, book1);
 
         RestAssured.given()
                 .contentType("application/json")
                 .cookie("token", token)
-                .pathParam("id", 1L)
+                .pathParam("id", reservation.getId())
                 .when()
                 .put("/reservations/{id}")
                 .then()
@@ -318,23 +345,67 @@ public class IntegrationTest {
     }
 
     @Test
+    void 사용자가_본인의_예약이_아닌_예약을_연장하면_예외가_발생한다() {
+        User duei = userFixture.createDuei();
+        LoginRequest loginRequest = new LoginRequest(duei.getEmail(), duei.getPassword());
+        String token = getToken(loginRequest);
+
+        Book book1 = bookFixture.createBook1();
+        reservationFixture.createReservation(duei, book1);
+
+        User brown = userFixture.createBrown();
+        Reservation reservationOfBrown = reservationFixture.createReservation(brown, book1);
+
+        RestAssured.given()
+                .contentType("application/json")
+                .cookie("token", token)
+                .pathParam("id", reservationOfBrown.getId())
+                .when()
+                .put("/reservations/{id}")
+                .then()
+                .statusCode(HttpStatus.NOT_FOUND.value());
+    }
+
+    @Test
     void 사용자가_자신의_예약을_취소한다() {
         User duei = userFixture.createDuei();
         LoginRequest loginRequest = new LoginRequest(duei.getEmail(), duei.getPassword());
         String token = getToken(loginRequest);
 
         Book book1 = bookFixture.createBook1();
-        reservationFixture.createReservation1(duei, book1);
+        Reservation reservation = reservationFixture.createReservation(duei, book1);
 
         RestAssured.given()
                 .contentType("application/json")
                 .cookie("token", token)
-                .pathParam("id", 1L)
+                .pathParam("id", reservation.getId())
                 .when()
                 .delete("/reservations/{id}")
                 .then()
                 .statusCode(HttpStatus.NO_CONTENT.value())
                 .log().all();
+    }
+
+    @Test
+    void 사용자가_본인의_예약이_아닌_예약을_취소하면_예외가_발생한다() {
+        User duei = userFixture.createDuei();
+        LoginRequest loginRequest = new LoginRequest(duei.getEmail(), duei.getPassword());
+        String token = getToken(loginRequest);
+
+        Book book1 = bookFixture.createBook1();
+        reservationFixture.createReservation(duei, book1);
+
+        User brown = userFixture.createBrown();
+        Reservation reservationOfBrown = reservationFixture.createReservation(brown, book1);
+
+        RestAssured.given()
+                .contentType("application/json")
+                .cookie("token", token)
+                .pathParam("id", reservationOfBrown.getId())
+                .when()
+                .delete("/reservations/{id}")
+                .then()
+                .statusCode(HttpStatus.NOT_FOUND.value());
     }
 
     private String getToken(LoginRequest request) {
