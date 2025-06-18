@@ -22,20 +22,20 @@ public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Getter
-    Long id;
+    private Long id;
 
     @Embedded
-    UserName name;
+    private UserName name;
 
     @Embedded
-    UserEmail email;
+    private UserEmail email;
 
     @Embedded
-    UserPassword password;
+    private UserPassword password;
 
     @Enumerated(EnumType.STRING)
     @Getter
-    Role role;
+    private Role role;
 
     public static User createCoach(UserName name, UserEmail email, UserPassword password) {
         return new User(null, name, email, password, Role.COACH);

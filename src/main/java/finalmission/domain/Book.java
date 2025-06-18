@@ -21,27 +21,27 @@ public class Book {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    Long id;
+    private Long id;
 
-    String title;
+    private String title;
 
-    String author;
+    private String author;
 
-    String image;
+    private String image;
 
-    String publisher;
+    private String publisher;
 
-    LocalDate pubdate;
+    private LocalDate pubdate;
 
-    String isbn;
+    private String isbn;
 
-    String description;
+    private String description;
 
-    int totalCount;
+    private int totalCount;
 
-    int availableCount;
+    private int availableCount;
 
-    LocalDate regDate;
+    private LocalDate regDate;
 
     public static Book createBook(String title, String author, String image, String publisher, LocalDate pubdate,
                                   String isbn, String description, int totalCount, LocalDate regDate) {
