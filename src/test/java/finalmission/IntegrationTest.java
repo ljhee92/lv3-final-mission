@@ -1,6 +1,7 @@
 package finalmission;
 
 import finalmission.domain.User;
+import finalmission.dto.request.BookCreateRequest;
 import finalmission.dto.request.LoginRequest;
 import finalmission.dto.request.LoginUser;
 import finalmission.fixture.UserFixture;
@@ -14,6 +15,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.http.HttpStatus;
 import org.springframework.test.annotation.DirtiesContext;
+
+import java.time.LocalDate;
 
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.notNullValue;
@@ -135,11 +138,9 @@ public class IntegrationTest {
         User brown = userFixture.createBrown();
         LoginRequest request = new LoginRequest(brown.getEmail(), brown.getPassword());
         String token = getToken(request);
-        LoginUser loginUser = new LoginUser(brown.getEmail(), brown.getName(), brown.getRole());
 
         RestAssured.given()
                 .contentType("application/json")
-                .body(loginUser)
                 .cookie("token", token)
                 .param("keyword", "오브젝트")
                 .when()
@@ -155,11 +156,9 @@ public class IntegrationTest {
         User brown = userFixture.createBrown();
         LoginRequest request = new LoginRequest(brown.getEmail(), brown.getPassword());
         String token = getToken(request);
-        LoginUser loginUser = new LoginUser(brown.getEmail(), brown.getName(), brown.getRole());
 
         RestAssured.given()
                 .contentType("application/json")
-                .body(loginUser)
                 .cookie("token", token)
                 .param("keyword", "")
                 .when()
@@ -167,6 +166,37 @@ public class IntegrationTest {
                 .then()
                 .statusCode(HttpStatus.BAD_REQUEST.value())
                 .log().all();
+    }
+
+    @Test
+    void 관리자가_도서를_등록한다() {
+        User brown = userFixture.createBrown();
+        LoginRequest loginRequest = new LoginRequest(brown.getEmail(), brown.getPassword());
+        String token = getToken(loginRequest);
+
+        BookCreateRequest request = new BookCreateRequest(
+                "오브젝트",
+                "조영호",
+                "https://shopping-phinf.pstatic.net/main_3245323/32453230352.20230627102640.jpg",
+                "위키북스",
+                LocalDate.of(2019, 6, 17),
+                "9791158391409",
+                "오브젝트설명",
+                2,
+                LocalDate.now()
+        );
+
+        RestAssured.given()
+                .contentType("application/json")
+                .cookie("token", token)
+                .body(request)
+                .when()
+                .post("/admin/books")
+                .then()
+                .statusCode(HttpStatus.CREATED.value())
+                .body("size()", is(10))
+                .log().all();
+
     }
 
     private String getToken(LoginRequest request) {

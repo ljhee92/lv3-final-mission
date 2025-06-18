@@ -1,9 +1,13 @@
 package finalmission.application;
 
+import finalmission.domain.Book;
 import finalmission.domain.Keyword;
+import finalmission.dto.request.BookCreateRequest;
+import finalmission.dto.response.BookCreateResponse;
 import finalmission.dto.response.BookSearchResponse;
 import finalmission.dto.response.NaverBookResponses;
 import finalmission.infrastructure.thirdparty.ApiRestClient;
+import finalmission.repository.BookRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -12,9 +16,14 @@ import java.util.List;
 public class BookService {
 
     private final ApiRestClient apiRestClient;
+    private final BookRepository bookRepository;
 
-    public BookService(ApiRestClient apiRestClient) {
+    public BookService(
+            ApiRestClient apiRestClient,
+            BookRepository bookRepository
+    ) {
         this.apiRestClient = apiRestClient;
+        this.bookRepository = bookRepository;
     }
 
     public List<BookSearchResponse> searchBooks(String keyword) {
@@ -23,5 +32,25 @@ public class BookService {
                 .stream()
                 .map(BookSearchResponse::from)
                 .toList();
+    }
+
+    public BookCreateResponse registerBook(BookCreateRequest request) {
+        Book bookWithoutId = createBook(request);
+        Book bookWithId = bookRepository.save(bookWithoutId);
+        return BookCreateResponse.from(bookWithId);
+    }
+
+    private Book createBook(BookCreateRequest request) {
+        return Book.createBook(
+                request.title(),
+                request.author(),
+                request.image(),
+                request.publisher(),
+                request.pubdate(),
+                request.isbn(),
+                request.description(),
+                request.totalCount(),
+                request.regDate()
+        );
     }
 }
