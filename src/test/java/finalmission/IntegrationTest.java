@@ -1,7 +1,6 @@
 package finalmission;
 
 import finalmission.domain.Book;
-import finalmission.domain.Reservation;
 import finalmission.domain.User;
 import finalmission.dto.request.BookCreateRequest;
 import finalmission.dto.request.LoginRequest;
@@ -315,6 +314,26 @@ public class IntegrationTest {
                 .then()
                 .statusCode(HttpStatus.OK.value())
                 .body("size()", is(10))
+                .log().all();
+    }
+
+    @Test
+    void 사용자가_자신의_예약을_취소한다() {
+        User duei = userFixture.createDuei();
+        LoginRequest loginRequest = new LoginRequest(duei.getEmail(), duei.getPassword());
+        String token = getToken(loginRequest);
+
+        Book book1 = bookFixture.createBook1();
+        reservationFixture.createReservation1(duei, book1);
+
+        RestAssured.given()
+                .contentType("application/json")
+                .cookie("token", token)
+                .pathParam("id", 1L)
+                .when()
+                .delete("/reservations/{id}")
+                .then()
+                .statusCode(HttpStatus.NO_CONTENT.value())
                 .log().all();
     }
 

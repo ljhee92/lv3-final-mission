@@ -85,4 +85,12 @@ public class ReservationService {
         reservation.extendReturnDate();
         return MyReservationDetailResponse.from(reservation);
     }
+
+    @Transactional
+    public void cancelReservation(String email, Long reservationId) {
+        User user = userService.findByEmail(email);
+        Reservation reservation = findById(reservationId);
+        validateUserOfReservation(reservation, user);
+        reservationRepository.delete(reservation);
+    }
 }
