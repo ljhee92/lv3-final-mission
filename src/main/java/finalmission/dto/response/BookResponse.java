@@ -1,10 +1,11 @@
 package finalmission.dto.response;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import finalmission.domain.Book;
 
 import java.time.LocalDate;
 
-public record BookSearchResponse(
+public record BookResponse(
         String title,
 
         String author,
@@ -21,8 +22,8 @@ public record BookSearchResponse(
         String description
 ) {
 
-    public static BookSearchResponse from(NaverBookResponse response) {
-        return new BookSearchResponse(
+    public static BookResponse from(NaverBookResponse response) {
+        return new BookResponse(
                 response.title(),
                 response.author(),
                 response.image(),
@@ -30,6 +31,18 @@ public record BookSearchResponse(
                 response.pubdate(),
                 response.isbn(),
                 response.description()
+        );
+    }
+
+    public static BookResponse from(Book book) {
+        return new BookResponse(
+                book.getTitle(),
+                book.getAuthor(),
+                book.getImage(),
+                book.getPublisher(),
+                book.getPubdate(),
+                book.getIsbn(),
+                book.getDescription()
         );
     }
 }

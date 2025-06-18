@@ -8,20 +8,7 @@ import java.time.LocalDate;
 public record MyReservationDetailResponse(
         Long id,
 
-        String title,
-
-        String author,
-
-        String image,
-
-        String publisher,
-
-        @JsonFormat(pattern = "yyyy-MM-dd")
-        LocalDate pubdate,
-
-        String isbn,
-
-        String description,
+        BookResponse bookResponse,
 
         @JsonFormat(pattern = "yyyy-MM-dd")
         LocalDate reserveDate,
@@ -33,13 +20,7 @@ public record MyReservationDetailResponse(
     public static MyReservationDetailResponse from(Reservation reservation) {
         return new MyReservationDetailResponse(
                 reservation.getId(),
-                reservation.getBook().getTitle(),
-                reservation.getBook().getAuthor(),
-                reservation.getBook().getImage(),
-                reservation.getBook().getPublisher(),
-                reservation.getBook().getPubdate(),
-                reservation.getBook().getIsbn(),
-                reservation.getBook().getDescription(),
+                BookResponse.from(reservation.getBook()),
                 reservation.getReserveDate(),
                 reservation.getReturnDate()
         );

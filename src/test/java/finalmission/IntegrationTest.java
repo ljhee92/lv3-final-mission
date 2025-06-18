@@ -209,7 +209,7 @@ public class IntegrationTest {
                 .post("/admin/books")
                 .then()
                 .statusCode(HttpStatus.CREATED.value())
-                .body("size()", is(10))
+                .body("size()", is(4))
                 .log().all();
     }
 
@@ -297,7 +297,7 @@ public class IntegrationTest {
                 .get("/reservations/{id}")
                 .then()
                 .statusCode(HttpStatus.OK.value())
-                .body("size()", is(10))
+                .body("size()", is(4))
                 .log().all();
     }
 
@@ -340,7 +340,7 @@ public class IntegrationTest {
                 .put("/reservations/{id}")
                 .then()
                 .statusCode(HttpStatus.OK.value())
-                .body("size()", is(10))
+                .body("size()", is(4))
                 .log().all();
     }
 

@@ -4,7 +4,7 @@ import finalmission.domain.Book;
 import finalmission.domain.Keyword;
 import finalmission.dto.request.BookCreateRequest;
 import finalmission.dto.response.BookCreateResponse;
-import finalmission.dto.response.BookSearchResponse;
+import finalmission.dto.response.BookResponse;
 import finalmission.dto.response.NaverBookResponses;
 import finalmission.infrastructure.thirdparty.ApiRestClient;
 import finalmission.repository.BookRepository;
@@ -28,11 +28,11 @@ public class BookService {
         this.bookRepository = bookRepository;
     }
 
-    public List<BookSearchResponse> searchBooks(String keyword) {
+    public List<BookResponse> searchBooks(String keyword) {
         NaverBookResponses naverBookResponses = apiRestClient.searchBooks(Keyword.from(keyword));
         return naverBookResponses.items()
                 .stream()
-                .map(BookSearchResponse::from)
+                .map(BookResponse::from)
                 .toList();
     }
 

@@ -4,7 +4,7 @@ import finalmission.application.BookService;
 import finalmission.dto.request.BookCreateRequest;
 import finalmission.dto.request.LoginUser;
 import finalmission.dto.response.BookCreateResponse;
-import finalmission.dto.response.BookSearchResponse;
+import finalmission.dto.response.BookResponse;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -26,11 +26,11 @@ public class BookController {
     }
 
     @GetMapping("/admin/books")
-    public ResponseEntity<List<BookSearchResponse>> searchBooks(
+    public ResponseEntity<List<BookResponse>> searchBooks(
             @AuthenticationPrincipal LoginUser loginUser,
             @RequestParam(required = false) String keyword
     ) {
-        List<BookSearchResponse> responses = bookService.searchBooks(keyword);
+        List<BookResponse> responses = bookService.searchBooks(keyword);
         return ResponseEntity.ok(responses);
     }
 

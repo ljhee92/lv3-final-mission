@@ -7,19 +7,7 @@ import java.time.LocalDate;
 public record BookCreateResponse(
         Long id,
 
-        String title,
-
-        String author,
-
-        String image,
-
-        String publisher,
-
-        LocalDate pubdate,
-
-        String isbn,
-
-        String description,
+        BookResponse bookResponse,
 
         int totalCount,
 
@@ -29,13 +17,7 @@ public record BookCreateResponse(
     public static BookCreateResponse from(Book book) {
         return new BookCreateResponse(
                 book.getId(),
-                book.getTitle(),
-                book.getAuthor(),
-                book.getImage(),
-                book.getPublisher(),
-                book.getPubdate(),
-                book.getIsbn(),
-                book.getDescription(),
+                BookResponse.from(book),
                 book.getTotalCount(),
                 book.getRegDate()
         );
