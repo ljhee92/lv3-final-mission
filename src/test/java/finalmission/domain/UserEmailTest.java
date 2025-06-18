@@ -22,7 +22,7 @@ class UserEmailTest {
 
     @ParameterizedTest
     @ValueSource(strings = {"", " "})
-    void 사용자의_이메일이_빈값면_예외가_발생한다(String email) {
+    void 사용자의_이메일이_빈값이면_예외가_발생한다(String email) {
         assertThatThrownBy(() -> UserEmail.from(email))
                 .isInstanceOf(IllegalArgumentException.class);
     }

@@ -16,14 +16,14 @@
 ### 프로그래밍 요구사항
 - [x] H2 활용
 - [ ] TDD
-- [ ] 외부 API 연동 - [네이버 도서 검색 API](https://developers.naver.com/docs/serviceapi/search/book/book.md)
+- [x] 외부 API 연동 - [네이버 도서 검색 API](https://developers.naver.com/docs/serviceapi/search/book/book.md)
 
 ### 기능 목록
 1. 로그인
    - [x] 관리자와 사용자는 email, password를 사용하여 로그인한다.
 
 2. 도서 관리
-   - [ ] 관리자는 네이버 도서 검색으로 도서를 검색할 수 있다.
+   - [x] 관리자는 네이버 도서 검색으로 도서를 검색할 수 있다.
    - [ ] 관리자는 예약 가능한 도서를 등록할 수 있다.
 
 3. 예약

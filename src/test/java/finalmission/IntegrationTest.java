@@ -130,6 +130,45 @@ public class IntegrationTest {
                 .log().all();
     }
 
+    @Test
+    void 관리자가_도서를_조회한다() {
+        User brown = userFixture.createBrown();
+        LoginRequest request = new LoginRequest(brown.getEmail(), brown.getPassword());
+        String token = getToken(request);
+        LoginUser loginUser = new LoginUser(brown.getEmail(), brown.getName(), brown.getRole());
+
+        RestAssured.given()
+                .contentType("application/json")
+                .body(loginUser)
+                .cookie("token", token)
+                .param("keyword", "오브젝트")
+                .when()
+                .get("/admin/books")
+                .then()
+                .statusCode(HttpStatus.OK.value())
+                .body("size()", is(10))
+                .log().all();
+    }
+
+    @Test
+    void 관리자가_도서조회시_키워드를_입력하지_않으면_예외가_발생한다() {
+        User brown = userFixture.createBrown();
+        LoginRequest request = new LoginRequest(brown.getEmail(), brown.getPassword());
+        String token = getToken(request);
+        LoginUser loginUser = new LoginUser(brown.getEmail(), brown.getName(), brown.getRole());
+
+        RestAssured.given()
+                .contentType("application/json")
+                .body(loginUser)
+                .cookie("token", token)
+                .param("keyword", "")
+                .when()
+                .get("/admin/books")
+                .then()
+                .statusCode(HttpStatus.BAD_REQUEST.value())
+                .log().all();
+    }
+
     private String getToken(LoginRequest request) {
         return RestAssured.given()
                 .contentType("application/json")

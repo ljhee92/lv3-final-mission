@@ -22,7 +22,7 @@ class UserNameTest {
 
     @ParameterizedTest
     @ValueSource(strings = {"", " "})
-    void 사용자의_이름이_빈값면_예외가_발생한다(String name) {
+    void 사용자의_이름이_빈값이면_예외가_발생한다(String name) {
         assertThatThrownBy(() -> UserName.from(name))
                 .isInstanceOf(IllegalArgumentException.class);
     }

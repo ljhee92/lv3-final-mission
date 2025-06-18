@@ -22,7 +22,7 @@ class UserPasswordTest {
 
     @ParameterizedTest
     @ValueSource(strings = {"", " "})
-    void 사용자의_비밀번호가_빈값면_예외가_발생한다(String password) {
+    void 사용자의_비밀번호가_빈값이면_예외가_발생한다(String password) {
         assertThatThrownBy(() -> UserPassword.from(password))
                 .isInstanceOf(IllegalArgumentException.class);
     }
