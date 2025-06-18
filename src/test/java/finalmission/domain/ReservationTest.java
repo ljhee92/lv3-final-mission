@@ -7,6 +7,7 @@ import org.junit.jupiter.api.Test;
 import java.time.LocalDate;
 import java.time.LocalTime;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 @DisplayNameGeneration(DisplayNameGenerator.ReplaceUnderscores.class)
@@ -35,5 +36,61 @@ class ReservationTest {
 
         assertThatThrownBy(() -> Reservation.createReservation(crew, book, reserveDate, reserveTime))
                 .isInstanceOf(IllegalArgumentException.class);
+    }
+
+    @Test
+    void 예약의_사용자와_동일한_사용자면_true를_반환한다() {
+        UserName name = UserName.from("듀이");
+        UserEmail email = UserEmail.from("duei@email.com");
+        UserPassword password = UserPassword.from("password");
+        User crew = User.createCrew(name, email, password);
+
+        String title = "오브젝트";
+        String author = "조영호";
+        String image = "https://shopping-phinf.pstatic.net/main_3245323/32453230352.20230627102640.jpg";
+        String publisher = "위키북스";
+        LocalDate pubdate = LocalDate.of(2019, 6, 17);
+        String isbn = "9791158391409";
+        String description = "오브젝트설명";
+        int totalCount = 2;
+        LocalDate regDate = LocalDate.now();
+        Book book = Book.createBook(title, author, image, publisher, pubdate, isbn, description, totalCount, regDate);
+
+        LocalDate reserveDate = LocalDate.now();
+        LocalTime reserveTime = LocalTime.now().plusSeconds(1);
+
+        Reservation reservation = Reservation.createReservation(crew, book, reserveDate, reserveTime);
+
+        assertThat(reservation.isSameUser(crew)).isTrue();
+    }
+
+    @Test
+    void 예약의_사용자와_동일한_사용자가_아니면_false를_반환한다() {
+        UserName name = UserName.from("듀이");
+        UserEmail email = UserEmail.from("duei@email.com");
+        UserPassword password = UserPassword.from("password");
+        User duei = User.createCrew(name, email, password);
+
+        UserName anotherName = UserName.from("브라운");
+        UserEmail anotherEmail = UserEmail.from("brown@email.com");
+        User brown = User.createCoach(anotherName, anotherEmail, password);
+
+        String title = "오브젝트";
+        String author = "조영호";
+        String image = "https://shopping-phinf.pstatic.net/main_3245323/32453230352.20230627102640.jpg";
+        String publisher = "위키북스";
+        LocalDate pubdate = LocalDate.of(2019, 6, 17);
+        String isbn = "9791158391409";
+        String description = "오브젝트설명";
+        int totalCount = 2;
+        LocalDate regDate = LocalDate.now();
+        Book book = Book.createBook(title, author, image, publisher, pubdate, isbn, description, totalCount, regDate);
+
+        LocalDate reserveDate = LocalDate.now();
+        LocalTime reserveTime = LocalTime.now().plusSeconds(1);
+
+        Reservation reservation = Reservation.createReservation(duei, book, reserveDate, reserveTime);
+
+        assertThat(reservation.isSameUser(brown)).isFalse();
     }
 }

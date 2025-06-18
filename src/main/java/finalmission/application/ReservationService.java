@@ -5,6 +5,7 @@ import finalmission.domain.Reservation;
 import finalmission.domain.User;
 import finalmission.dto.request.ReservationCreateRequest;
 import finalmission.dto.response.AvailableBookResponse;
+import finalmission.dto.response.MyReservationDetailResponse;
 import finalmission.dto.response.MyReservationResponse;
 import finalmission.dto.response.ReservationCreateResponse;
 import finalmission.repository.ReservationRepository;
@@ -12,6 +13,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 
 @Service
 public class ReservationService {
@@ -55,5 +57,19 @@ public class ReservationService {
         return reservations.stream()
                 .map(MyReservationResponse::from)
                 .toList();
+    }
+
+    public MyReservationDetailResponse getReservation(String email, Long reservationId) {
+        User user = userService.findByEmail(email);
+        Reservation reservation = findById(reservationId);
+        if (!reservation.isSameUser(user)) {
+            throw new NoSuchElementException("[ERROR] 예약 정보와 사용자 정보가 다릅니다.");
+        }
+        return MyReservationDetailResponse.from(reservation);
+    }
+
+    public Reservation findById(Long id) {
+        return reservationRepository.findById(id)
+                .orElseThrow(() -> new NoSuchElementException("[ERROR] 예약 정보가 없습니다."));
     }
 }

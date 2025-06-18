@@ -13,6 +13,8 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.util.Objects;
+
 @Entity
 @Table(name = "\"User\"")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -70,5 +72,20 @@ public class User {
                 ", password=" + password +
                 ", role=" + role +
                 '}';
+    }
+
+    @Override
+    public boolean equals(final Object o) {
+        if (o == null || getClass() != o.getClass()) return false;
+        User user = (User) o;
+        if (id != null && user.id != null) {
+            return Objects.equals(id, user.id);
+        }
+        return Objects.equals(email, user.email);
+    }
+
+    @Override
+    public int hashCode() {
+        return id != null ? Objects.hashCode(id) : Objects.hashCode(email);
     }
 }

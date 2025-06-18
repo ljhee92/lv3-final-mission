@@ -276,6 +276,27 @@ public class IntegrationTest {
                 .log().all();
     }
 
+    @Test
+    void 사용자가_예약_상세정보를_조회한다() {
+        User duei = userFixture.createDuei();
+        LoginRequest loginRequest = new LoginRequest(duei.getEmail(), duei.getPassword());
+        String token = getToken(loginRequest);
+
+        Book book1 = bookFixture.createBook1();
+        reservationFixture.createReservation1(duei, book1);
+
+        RestAssured.given()
+                .contentType("application/json")
+                .cookie("token", token)
+                .pathParam("id", 1L)
+                .when()
+                .get("/reservations/{id}")
+                .then()
+                .statusCode(HttpStatus.OK.value())
+                .body("size()", is(10))
+                .log().all();
+    }
+
     private String getToken(LoginRequest request) {
         return RestAssured.given()
                 .contentType("application/json")

@@ -4,12 +4,14 @@ import finalmission.application.ReservationService;
 import finalmission.dto.request.LoginUser;
 import finalmission.dto.request.ReservationCreateRequest;
 import finalmission.dto.response.AvailableBookResponse;
+import finalmission.dto.response.MyReservationDetailResponse;
 import finalmission.dto.response.MyReservationResponse;
 import finalmission.dto.response.ReservationCreateResponse;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -50,5 +52,14 @@ public class ReservationController {
     ) {
         List<MyReservationResponse> responses = reservationService.getReservations(loginUser.email());
         return ResponseEntity.ok(responses);
+    }
+
+    @GetMapping("/reservations/{id}")
+    public ResponseEntity<MyReservationDetailResponse> getReservation(
+            @AuthenticationPrincipal LoginUser loginUser,
+            @PathVariable(required = false) Long id
+    ) {
+        MyReservationDetailResponse response = reservationService.getReservation(loginUser.email(), id);
+        return ResponseEntity.ok(response);
     }
 }

@@ -35,9 +35,11 @@ public class Reservation {
 
     private LocalTime reserveTime;
 
+    private LocalDate returnDate;
+
     public static Reservation createReservation(User user, Book book, LocalDate reserveDate, LocalTime reserveTime) {
         validateDateTime(reserveDate, reserveTime);
-        return new Reservation(null, user, book, reserveDate, reserveTime);
+        return new Reservation(null, user, book, reserveDate, reserveTime, reserveDate.plusDays(6));
     }
 
     private static void validateDateTime(LocalDate reserveDate, LocalTime reserveTime) {
@@ -45,5 +47,9 @@ public class Reservation {
         if (dateTime.isBefore(LocalDateTime.now())) {
             throw new IllegalArgumentException("[ERROR] 예약은 현재시간 이후여야 합니다.");
         }
+    }
+
+    public boolean isSameUser(User user) {
+        return user.equals(this.user);
     }
 }
