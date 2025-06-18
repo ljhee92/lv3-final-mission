@@ -4,6 +4,7 @@ import finalmission.domain.User;
 import finalmission.dto.request.BookCreateRequest;
 import finalmission.dto.request.LoginRequest;
 import finalmission.dto.request.LoginUser;
+import finalmission.dto.request.ReservationCreateRequest;
 import finalmission.fixture.BookFixture;
 import finalmission.fixture.UserFixture;
 import io.restassured.RestAssured;
@@ -18,6 +19,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.test.annotation.DirtiesContext;
 
 import java.time.LocalDate;
+import java.time.LocalTime;
 
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.notNullValue;
@@ -219,6 +221,32 @@ public class IntegrationTest {
                 .then()
                 .statusCode(HttpStatus.OK.value())
                 .body("size()", is(1))
+                .log().all();
+    }
+
+    @Test
+    void 사용자가_도서를_예약한다() {
+        User duei = userFixture.createDuei();
+        LoginRequest loginRequest = new LoginRequest(duei.getEmail(), duei.getPassword());
+        String token = getToken(loginRequest);
+
+        bookFixture.createBook1();
+
+        ReservationCreateRequest request = new ReservationCreateRequest(
+                1L,
+                LocalDate.now(),
+                LocalTime.now().plusSeconds(1)
+        );
+
+        RestAssured.given()
+                .contentType("application/json")
+                .cookie("token", token)
+                .body(request)
+                .when()
+                .post("/reservations")
+                .then()
+                .statusCode(HttpStatus.CREATED.value())
+                .body("size()", is(5))
                 .log().all();
     }
 

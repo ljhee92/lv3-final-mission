@@ -1,0 +1,39 @@
+package finalmission.domain;
+
+import org.junit.jupiter.api.DisplayNameGeneration;
+import org.junit.jupiter.api.DisplayNameGenerator;
+import org.junit.jupiter.api.Test;
+
+import java.time.LocalDate;
+import java.time.LocalTime;
+
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
+
+@DisplayNameGeneration(DisplayNameGenerator.ReplaceUnderscores.class)
+class ReservationTest {
+
+    @Test
+    void 현재시간_이전으로_예약을_생성하면_예외가_발생한다() {
+        UserName name = UserName.from("듀이");
+        UserEmail email = UserEmail.from("duei@email.com");
+        UserPassword password = UserPassword.from("password");
+        User crew = User.createCrew(name, email, password);
+
+        String title = "오브젝트";
+        String author = "조영호";
+        String image = "https://shopping-phinf.pstatic.net/main_3245323/32453230352.20230627102640.jpg";
+        String publisher = "위키북스";
+        LocalDate pubdate = LocalDate.of(2019, 6, 17);
+        String isbn = "9791158391409";
+        String description = "오브젝트설명";
+        int totalCount = 2;
+        LocalDate regDate = LocalDate.now();
+        Book book = Book.createBook(title, author, image, publisher, pubdate, isbn, description, totalCount, regDate);
+
+        LocalDate reserveDate = LocalDate.now();
+        LocalTime reserveTime = LocalTime.now().minusNanos(1);
+
+        assertThatThrownBy(() -> Reservation.createReservation(crew, book, reserveDate, reserveTime))
+                .isInstanceOf(IllegalArgumentException.class);
+    }
+}

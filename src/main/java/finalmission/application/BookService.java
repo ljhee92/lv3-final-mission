@@ -9,8 +9,10 @@ import finalmission.dto.response.NaverBookResponses;
 import finalmission.infrastructure.thirdparty.ApiRestClient;
 import finalmission.repository.BookRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 
 @Service
 public class BookService {
@@ -34,6 +36,7 @@ public class BookService {
                 .toList();
     }
 
+    @Transactional
     public BookCreateResponse registerBook(BookCreateRequest request) {
         Book bookWithoutId = createBook(request);
         Book bookWithId = bookRepository.save(bookWithoutId);
@@ -52,5 +55,14 @@ public class BookService {
                 request.totalCount(),
                 request.regDate()
         );
+    }
+
+    public List<Book> findAll() {
+        return bookRepository.findAll();
+    }
+
+    public Book findById(Long bookId) {
+        return bookRepository.findById(bookId)
+                .orElseThrow(() -> new NoSuchElementException("[ERROR] 존재하지 않는 도서입니다."));
     }
 }
