@@ -62,14 +62,27 @@ public class ReservationService {
     public MyReservationDetailResponse getReservation(String email, Long reservationId) {
         User user = userService.findByEmail(email);
         Reservation reservation = findById(reservationId);
-        if (!reservation.isSameUser(user)) {
-            throw new NoSuchElementException("[ERROR] 예약 정보와 사용자 정보가 다릅니다.");
-        }
+        validateUserOfReservation(reservation, user);
         return MyReservationDetailResponse.from(reservation);
     }
 
     public Reservation findById(Long id) {
         return reservationRepository.findById(id)
                 .orElseThrow(() -> new NoSuchElementException("[ERROR] 예약 정보가 없습니다."));
+    }
+
+    private void validateUserOfReservation(Reservation reservation, User user) {
+        if (!reservation.isSameUser(user)) {
+            throw new NoSuchElementException("[ERROR] 예약 정보와 사용자 정보가 다릅니다.");
+        }
+    }
+
+    @Transactional
+    public MyReservationDetailResponse extendReservation(String email, Long reservationId) {
+        User user = userService.findByEmail(email);
+        Reservation reservation = findById(reservationId);
+        validateUserOfReservation(reservation, user);
+        reservation.extendReturnDate();
+        return MyReservationDetailResponse.from(reservation);
     }
 }

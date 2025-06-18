@@ -13,6 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -60,6 +61,15 @@ public class ReservationController {
             @PathVariable(required = false) Long id
     ) {
         MyReservationDetailResponse response = reservationService.getReservation(loginUser.email(), id);
+        return ResponseEntity.ok(response);
+    }
+
+    @PutMapping("/reservations/{id}")
+    public ResponseEntity<MyReservationDetailResponse> updateReservation(
+            @AuthenticationPrincipal LoginUser loginUser,
+            @PathVariable(required = false) Long id
+    ) {
+        MyReservationDetailResponse response = reservationService.extendReservation(loginUser.email(), id);
         return ResponseEntity.ok(response);
     }
 }

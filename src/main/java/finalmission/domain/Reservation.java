@@ -52,4 +52,8 @@ public class Reservation {
     public boolean isSameUser(User user) {
         return user.equals(this.user);
     }
+
+    public void extendReturnDate() {
+        this.returnDate = this.returnDate.plusDays(7);
+    }
 }
