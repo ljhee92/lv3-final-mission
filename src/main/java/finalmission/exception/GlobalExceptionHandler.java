@@ -32,4 +32,14 @@ public class GlobalExceptionHandler {
                 .status(status)
                 .body(new ErrorResponse(status, message));
     }
+
+    @ExceptionHandler
+    public ResponseEntity<ErrorResponse> handleAuthException(AuthException e) {
+        HttpStatus status = e.getStatus();
+        String message = e.getMessage();
+        log.warn(message);
+        return ResponseEntity
+                .status(status)
+                .body(new ErrorResponse(status, message));
+    }
 }

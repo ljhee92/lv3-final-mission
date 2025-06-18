@@ -26,4 +26,10 @@ public class AuthService {
         LoginUser loginUser = new LoginUser(user.getEmail(), user.getName(), user.getRole());
         return jwtTokenProvider.createToken(loginUser);
     }
+
+    public LoginUser findLoginUserByToken(String token) {
+        String emailFromToken = jwtTokenProvider.getEmailFromToken(token);
+        User user = userService.findByEmail(emailFromToken);
+        return new LoginUser(user.getEmail(), user.getName(), user.getRole());
+    }
 }

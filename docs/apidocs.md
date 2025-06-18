@@ -34,7 +34,9 @@ HTTP/1.1 200 OK
 Content-Type: application/json
 
 {
-  "name": "브라운"
+  "email": "brown@email.com",
+  "name": "브라운",
+  "role": "COACH"
 }
 ```
 

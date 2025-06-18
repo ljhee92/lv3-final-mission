@@ -2,6 +2,7 @@ package finalmission;
 
 import finalmission.domain.User;
 import finalmission.dto.request.LoginRequest;
+import finalmission.dto.request.LoginUser;
 import finalmission.fixture.UserFixture;
 import io.restassured.RestAssured;
 import org.junit.jupiter.api.BeforeEach;
@@ -14,6 +15,7 @@ import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.http.HttpStatus;
 import org.springframework.test.annotation.DirtiesContext;
 
+import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.notNullValue;
 
 @DisplayNameGeneration(DisplayNameGenerator.ReplaceUnderscores.class)
@@ -44,7 +46,8 @@ public class IntegrationTest {
                 .post("/login")
                 .then()
                 .statusCode(HttpStatus.OK.value())
-                .cookie("token", notNullValue());
+                .cookie("token", notNullValue())
+                .log().all();
     }
 
     @Test
@@ -58,7 +61,8 @@ public class IntegrationTest {
                 .when()
                 .post("/login")
                 .then()
-                .statusCode(HttpStatus.NOT_FOUND.value());
+                .statusCode(HttpStatus.NOT_FOUND.value())
+                .log().all();
     }
 
     @Test
@@ -72,6 +76,68 @@ public class IntegrationTest {
                 .when()
                 .post("/login")
                 .then()
-                .statusCode(HttpStatus.BAD_REQUEST.value());
+                .statusCode(HttpStatus.BAD_REQUEST.value())
+                .log().all();
+    }
+
+    @Test
+    void 로그인된_인증정보를_확인한다() {
+        User duei = userFixture.createDuei();
+        LoginRequest request = new LoginRequest(duei.getEmail(), duei.getPassword());
+        String token = getToken(request);
+        LoginUser loginUser = new LoginUser(duei.getEmail(), duei.getName(), duei.getRole());
+
+        RestAssured.given()
+                .contentType("application/json")
+                .body(loginUser)
+                .cookie("token", token)
+                .when()
+                .get("/login/check")
+                .then()
+                .statusCode(HttpStatus.OK.value())
+                .body("size()", is(3))
+                .log().all();
+    }
+
+    @Test
+    void 쿠키가_존재하지_않으면_예외가_발생한다() {
+        User duei = userFixture.createDuei();
+        LoginUser loginUser = new LoginUser(duei.getEmail(), duei.getName(), duei.getRole());
+
+        RestAssured.given()
+                .contentType("application/json")
+                .body(loginUser)
+                .when()
+                .get("/login/check")
+                .then()
+                .statusCode(HttpStatus.UNAUTHORIZED.value())
+                .log().all();
+    }
+
+    @Test
+    void 토큰이_존재하지_않으면_예외가_발생한다() {
+        User duei = userFixture.createDuei();
+        LoginUser loginUser = new LoginUser(duei.getEmail(), duei.getName(), duei.getRole());
+
+        RestAssured.given()
+                .contentType("application/json")
+                .body(loginUser)
+                .cookie("notToken", "notToken")
+                .when()
+                .get("/login/check")
+                .then()
+                .statusCode(HttpStatus.UNAUTHORIZED.value())
+                .log().all();
+    }
+
+    private String getToken(LoginRequest request) {
+        return RestAssured.given()
+                .contentType("application/json")
+                .body(request)
+                .when()
+                .post("/login")
+                .then()
+                .extract()
+                .cookie("token");
     }
 }
