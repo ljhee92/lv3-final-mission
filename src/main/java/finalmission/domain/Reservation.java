@@ -37,15 +37,14 @@ public class Reservation {
 
     private LocalDate returnDate;
 
-    public static Reservation createReservation(User user, Book book, LocalDate reserveDate, LocalTime reserveTime) {
-        validateDateTime(reserveDate, reserveTime);
-        return new Reservation(null, user, book, reserveDate, reserveTime, reserveDate.plusDays(6));
+    public static Reservation createReservation(User user, Book book, LocalDate reserveDate) {
+        validateDate(reserveDate);
+        return new Reservation(null, user, book, reserveDate, LocalTime.now(), reserveDate.plusDays(6));
     }
 
-    private static void validateDateTime(LocalDate reserveDate, LocalTime reserveTime) {
-        LocalDateTime dateTime = LocalDateTime.of(reserveDate, reserveTime);
-        if (dateTime.isBefore(LocalDateTime.now())) {
-            throw new IllegalArgumentException("[ERROR] 예약은 현재시간 이후여야 합니다.");
+    private static void validateDate(LocalDate reserveDate) {
+        if (reserveDate.isBefore(LocalDate.now())) {
+            throw new IllegalArgumentException("[ERROR] 예약은 현재 날짜 이후만 가능합니다.");
         }
     }
 

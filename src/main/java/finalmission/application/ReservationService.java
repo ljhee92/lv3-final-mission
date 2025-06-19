@@ -45,9 +45,7 @@ public class ReservationService {
         Book book = bookService.findById(request.bookId());
         book.checkAvailableCount();
 
-        Reservation reservationWithoutId = Reservation.createReservation(
-                user, book, request.reserveDate(), request.reserveTime()
-        );
+        Reservation reservationWithoutId = Reservation.createReservation(user, book, request.reserveDate());
         book.adjustAvailableCount(1);
         Reservation reservationWithId = reservationRepository.save(reservationWithoutId);
         return ReservationCreateResponse.from(reservationWithId);

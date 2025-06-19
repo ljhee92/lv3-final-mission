@@ -243,8 +243,7 @@ public class IntegrationTest {
 
         ReservationCreateRequest request = new ReservationCreateRequest(
                 book1.getId(),
-                LocalDate.now(),
-                LocalTime.now().plusSeconds(1)
+                LocalDate.now()
         );
 
         RestAssured.given()
@@ -271,8 +270,7 @@ public class IntegrationTest {
 
         ReservationCreateRequest request = new ReservationCreateRequest(
                 book1.getId(),
-                LocalDate.now(),
-                LocalTime.now().plusSeconds(1)
+                LocalDate.now()
         );
 
         RestAssured.given()

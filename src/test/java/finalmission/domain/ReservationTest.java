@@ -5,7 +5,6 @@ import org.junit.jupiter.api.DisplayNameGenerator;
 import org.junit.jupiter.api.Test;
 
 import java.time.LocalDate;
-import java.time.LocalTime;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -14,7 +13,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 class ReservationTest {
 
     @Test
-    void 현재시간_이전으로_예약을_생성하면_예외가_발생한다() {
+    void 현재날짜_이전으로_예약을_생성하면_예외가_발생한다() {
         UserName name = UserName.from("듀이");
         UserEmail email = UserEmail.from("duei@email.com");
         UserPassword password = UserPassword.from("password");
@@ -31,10 +30,9 @@ class ReservationTest {
         LocalDate regDate = LocalDate.now();
         Book book = Book.createBook(title, author, image, publisher, pubdate, isbn, description, totalCount, regDate);
 
-        LocalDate reserveDate = LocalDate.now();
-        LocalTime reserveTime = LocalTime.now().minusNanos(1);
+        LocalDate reserveDate = LocalDate.now().minusDays(1);
 
-        assertThatThrownBy(() -> Reservation.createReservation(crew, book, reserveDate, reserveTime))
+        assertThatThrownBy(() -> Reservation.createReservation(crew, book, reserveDate))
                 .isInstanceOf(IllegalArgumentException.class);
     }
 
@@ -57,9 +55,8 @@ class ReservationTest {
         Book book = Book.createBook(title, author, image, publisher, pubdate, isbn, description, totalCount, regDate);
 
         LocalDate reserveDate = LocalDate.now();
-        LocalTime reserveTime = LocalTime.now().plusSeconds(1);
 
-        Reservation reservation = Reservation.createReservation(crew, book, reserveDate, reserveTime);
+        Reservation reservation = Reservation.createReservation(crew, book, reserveDate);
 
         assertThat(reservation.isSameUser(crew)).isTrue();
     }
@@ -87,9 +84,8 @@ class ReservationTest {
         Book book = Book.createBook(title, author, image, publisher, pubdate, isbn, description, totalCount, regDate);
 
         LocalDate reserveDate = LocalDate.now();
-        LocalTime reserveTime = LocalTime.now().plusSeconds(1);
 
-        Reservation reservation = Reservation.createReservation(duei, book, reserveDate, reserveTime);
+        Reservation reservation = Reservation.createReservation(duei, book, reserveDate);
 
         assertThat(reservation.isSameUser(brown)).isFalse();
     }
@@ -113,9 +109,8 @@ class ReservationTest {
         Book book = Book.createBook(title, author, image, publisher, pubdate, isbn, description, totalCount, regDate);
 
         LocalDate reserveDate = LocalDate.now();
-        LocalTime reserveTime = LocalTime.now().plusSeconds(1);
 
-        Reservation reservation = Reservation.createReservation(crew, book, reserveDate, reserveTime);
+        Reservation reservation = Reservation.createReservation(crew, book, reserveDate);
         reservation.extendReturnDate();
         LocalDate expected = reserveDate.plusDays(6).plusDays(7);
 
