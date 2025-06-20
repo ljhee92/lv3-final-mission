@@ -24,7 +24,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.test.annotation.DirtiesContext;
 
 import java.time.LocalDate;
-import java.time.LocalTime;
 import java.util.List;
 
 import static org.hamcrest.Matchers.is;
@@ -145,6 +144,22 @@ public class IntegrationTest {
                 .get("/login/check")
                 .then()
                 .statusCode(HttpStatus.UNAUTHORIZED.value())
+                .log().all();
+    }
+
+    @Test
+    void 로그아웃한다() {
+        User duei = userFixture.createDuei();
+        LoginRequest request = new LoginRequest(duei.getEmail(), duei.getPassword());
+        String token = getToken(request);
+
+        RestAssured.given()
+                .contentType("application/json")
+                .cookie("token", token)
+                .when()
+                .post("/logout")
+                .then()
+                .statusCode(HttpStatus.OK.value())
                 .log().all();
     }
 

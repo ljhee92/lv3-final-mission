@@ -19,8 +19,9 @@
 - [x] 외부 API 연동 - [네이버 도서 검색 API](https://developers.naver.com/docs/serviceapi/search/book/book.md)
 
 ### 기능 목록
-1. 로그인
+1. 로그인 및 로그아웃
    - [x] 관리자와 사용자는 email, password를 사용하여 로그인한다.
+   - [x] 관리자와 사용자는 로그아웃할 수 있다.
 
 2. 도서 관리
    - [x] 관리자는 네이버 도서 검색으로 도서를 검색할 수 있다.

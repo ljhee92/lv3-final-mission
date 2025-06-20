@@ -1,6 +1,6 @@
 # API 명세서
 
-## 1. 로그인
+## 1. 로그인 및 로그아웃
 ### 1-1. 로그인
 - **request**
 ```json
@@ -38,6 +38,19 @@ Content-Type: application/json
   "name": "브라운",
   "role": "COACH"
 }
+```
+
+### 1-3. 로그아웃
+- **request**
+```json
+POST /logout
+Content-Type: application/json
+cookie: _ga=GA1.1.48222725.1666268105; _ga_QD3BVX7MKT=GS1.1.1687746261.15.1.1687747186.0.0.0; Idea-25a74f9c=3cbc3411-daca-48c1-8201-51bdcdd93164; token=eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxIiwibmFtZSI6IuyWtOuTnOuvvCIsInJvbGUiOiJBRE1JTiJ9.vcK93ONRQYPFCxT5KleSM6b7cl1FE-neSLKaFyslsZM
+```
+
+- **response**
+```json
+HTTP/1.1 200 OK
 ```
 
 ## 2. 도서 관리

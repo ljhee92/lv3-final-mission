@@ -44,4 +44,18 @@ public class AuthController {
     public ResponseEntity<LoginUser> checkLogin(@AuthenticationPrincipal LoginUser loginUser) {
         return ResponseEntity.ok(loginUser);
     }
+
+    @PostMapping("/logout")
+    public ResponseEntity<Void> logout(HttpServletResponse response) {
+        expireCookie(response);
+        return  ResponseEntity.ok()
+                .build();
+    }
+
+    private void expireCookie(HttpServletResponse response) {
+        Cookie cookie = new Cookie("token", null);
+        cookie.setPath("/");
+        cookie.setMaxAge(0);
+        response.addCookie(cookie);
+    }
 }
