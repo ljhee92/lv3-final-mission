@@ -72,6 +72,23 @@ class BookTest {
     }
 
     @Test
+    void 사용자가_도서를_조회하면_예외가_발생한다() {
+        User duei = userFixture.createDuei();
+        LoginRequest loginRequest = new LoginRequest(duei.getEmail(), duei.getPassword());
+        String token = userFixture.getToken(loginRequest);
+
+        RestAssured.given()
+                .contentType(ContentType.JSON)
+                .cookie("token", token)
+                .param("keyword", "오브젝트")
+                .when()
+                .get("/admin/books")
+                .then()
+                .statusCode(HttpStatus.FORBIDDEN.value())
+                .log().all();
+    }
+
+    @Test
     void 관리자가_도서를_등록한다() {
         User brown = userFixture.createBrown();
         LoginRequest loginRequest = new LoginRequest(brown.getEmail(), brown.getPassword());
@@ -100,4 +117,34 @@ class BookTest {
                 .body("size()", is(4))
                 .log().all();
     }
+
+    @Test
+    void 사용자가_도서를_등록하면_예외가_발생한다() {
+        User duei = userFixture.createDuei();
+        LoginRequest loginRequest = new LoginRequest(duei.getEmail(), duei.getPassword());
+        String token = userFixture.getToken(loginRequest);
+
+        BookCreateRequest request = new BookCreateRequest(
+                "오브젝트",
+                "조영호",
+                "https://shopping-phinf.pstatic.net/main_3245323/32453230352.20230627102640.jpg",
+                "위키북스",
+                LocalDate.of(2019, 6, 17),
+                "9791158391409",
+                "오브젝트설명",
+                2,
+                LocalDate.now()
+        );
+
+        RestAssured.given()
+                .contentType(ContentType.JSON)
+                .cookie("token", token)
+                .body(request)
+                .when()
+                .post("/admin/books")
+                .then()
+                .statusCode(HttpStatus.FORBIDDEN.value())
+                .log().all();
+    }
+
 }

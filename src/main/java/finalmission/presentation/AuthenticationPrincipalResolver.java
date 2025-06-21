@@ -28,7 +28,7 @@ public class AuthenticationPrincipalResolver implements HandlerMethodArgumentRes
             ModelAndViewContainer mavContainer,
             NativeWebRequest webRequest,
             WebDataBinderFactory binderFactory
-    ) throws Exception {
+    ) {
         HttpServletRequest request = webRequest.getNativeRequest(HttpServletRequest.class);
         String token = JwtTokenExtractor.extract(request);
         return authService.findLoginUserByToken(token);
