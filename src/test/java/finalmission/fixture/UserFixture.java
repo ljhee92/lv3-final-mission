@@ -4,7 +4,10 @@ import finalmission.domain.User;
 import finalmission.domain.UserEmail;
 import finalmission.domain.UserName;
 import finalmission.domain.UserPassword;
+import finalmission.dto.request.LoginRequest;
 import finalmission.repository.UserRepository;
+import io.restassured.RestAssured;
+import io.restassured.http.ContentType;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -32,5 +35,16 @@ public class UserFixture {
         User duei = User.createCrew(name, email, password);
 
         return userRepository.save(duei);
+    }
+
+    public String getToken(LoginRequest request) {
+        return RestAssured.given()
+                .contentType(ContentType.JSON)
+                .body(request)
+                .when()
+                .post("/login")
+                .then()
+                .extract()
+                .cookie("token");
     }
 }
