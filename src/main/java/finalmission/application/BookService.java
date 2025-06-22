@@ -5,8 +5,8 @@ import finalmission.domain.Keyword;
 import finalmission.dto.request.BookCreateRequest;
 import finalmission.dto.response.BookCreateResponse;
 import finalmission.dto.response.BookResponse;
-import finalmission.dto.response.NaverBookResponses;
-import finalmission.infrastructure.thirdparty.ApiRestClient;
+import finalmission.dto.response.ApiBookResponses;
+import finalmission.infrastructure.thirdparty.BookApiRestClient;
 import finalmission.repository.BookRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -17,20 +17,20 @@ import java.util.NoSuchElementException;
 @Service
 public class BookService {
 
-    private final ApiRestClient apiRestClient;
+    private final BookApiRestClient bookApiRestClient;
     private final BookRepository bookRepository;
 
     public BookService(
-            ApiRestClient apiRestClient,
+            BookApiRestClient bookApiRestClient,
             BookRepository bookRepository
     ) {
-        this.apiRestClient = apiRestClient;
+        this.bookApiRestClient = bookApiRestClient;
         this.bookRepository = bookRepository;
     }
 
     public List<BookResponse> searchBooks(String keyword) {
-        NaverBookResponses naverBookResponses = apiRestClient.searchBooks(Keyword.from(keyword));
-        return naverBookResponses.items()
+        ApiBookResponses apiBookResponses = bookApiRestClient.searchBooks(Keyword.from(keyword));
+        return apiBookResponses.items()
                 .stream()
                 .map(BookResponse::from)
                 .toList();

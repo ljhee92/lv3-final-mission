@@ -1,7 +1,7 @@
 package finalmission.infrastructure.thirdparty;
 
 import finalmission.domain.Keyword;
-import finalmission.dto.response.NaverBookResponses;
+import finalmission.dto.response.ApiBookResponses;
 import finalmission.exception.NaverApiException;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.PropertySource;
@@ -15,14 +15,14 @@ import org.springframework.web.client.RestClientException;
 
 @Component
 @PropertySource("classpath:secure.properties")
-public class NaverApiRestClient implements ApiRestClient {
+public class NaverBookApiRestClient implements BookApiRestClient {
 
     private static final String NAVER_URL = "https://openapi.naver.com";
     private static final String SEARCH_URI = "/v1/search/book.json";
 
     private final RestClient restClient;
 
-    public NaverApiRestClient(
+    public NaverBookApiRestClient(
             @Value("${naver.client-id}") String clientId,
             @Value("${naver.client-secret}") String clientSecret,
             RestClient.Builder builder
@@ -36,7 +36,7 @@ public class NaverApiRestClient implements ApiRestClient {
     }
 
     @Override
-    public NaverBookResponses searchBooks(Keyword keyword) {
+    public ApiBookResponses searchBooks(Keyword keyword) {
         try {
             return restClient.get()
                     .uri(uriBuilder -> uriBuilder.path(SEARCH_URI)
@@ -49,7 +49,7 @@ public class NaverApiRestClient implements ApiRestClient {
                     .onStatus(HttpStatusCode::is5xxServerError, (req, res) -> {
                         throw new NaverApiException(res.getStatusText(), res.getStatusCode());
                     })
-                    .body(NaverBookResponses.class);
+                    .body(ApiBookResponses.class);
         } catch (RestClientException e) {
             throw new NaverApiException("[ERROR] API 통신 중 문제 발생", HttpStatus.SERVICE_UNAVAILABLE);
         }

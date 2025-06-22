@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 
 import java.time.LocalDate;
 
-public record NaverBookResponse(
+public record ApiBookResponse(
         String title,
 
         String author,

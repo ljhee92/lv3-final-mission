@@ -22,7 +22,7 @@ public record BookResponse(
         String description
 ) {
 
-    public static BookResponse from(NaverBookResponse response) {
+    public static BookResponse from(ApiBookResponse response) {
         return new BookResponse(
                 response.title(),
                 response.author(),
