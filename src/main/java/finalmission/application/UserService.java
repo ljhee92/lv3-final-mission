@@ -1,8 +1,7 @@
 package finalmission.application;
 
 import finalmission.domain.User;
-import finalmission.domain.UserEmail;
-import finalmission.domain.UserPassword;
+import finalmission.domain.UserId;
 import finalmission.repository.UserRepository;
 import org.springframework.stereotype.Service;
 
@@ -17,16 +16,18 @@ public class UserService {
         this.userRepository = userRepository;
     }
 
-    public User findByEmail(String email) {
-        UserEmail userEmail = UserEmail.from(email);
-        return userRepository.findByEmail(userEmail)
-                .orElseThrow(() -> new NoSuchElementException("[ERROR] 해당 이메일의 사용자가 존재하지 않습니다."));
+    public User findByUserId(String userId) {
+        UserId id = UserId.from(userId);
+        return userRepository.findByUserId(id)
+                .orElseThrow(() -> new NoSuchElementException("[ERROR] 사용자가 존재하지 않습니다."));
     }
 
-    public void checkPassword(User user, String password) {
-        UserPassword userPassword = UserPassword.from(password);
-        if (!user.isSamePassword(userPassword)) {
-            throw new IllegalArgumentException("[ERROR] 잘못된 비밀번호입니다.");
-        }
+    public boolean existsByUserId(String userId) {
+        UserId id = UserId.from(userId);
+        return userRepository.existsByUserId(id);
+    }
+
+    public User save(User user) {
+        return userRepository.save(user);
     }
 }

@@ -42,7 +42,7 @@ public class ReservationController {
             @AuthenticationPrincipal LoginUser loginUser,
             @RequestBody @Valid ReservationCreateRequest request
             ) {
-        ReservationCreateResponse response = reservationService.reserveBook(loginUser.email(), request);
+        ReservationCreateResponse response = reservationService.reserveBook(loginUser.userId(), request);
         return ResponseEntity
                 .status(HttpStatus.CREATED)
                 .body(response);
@@ -52,7 +52,7 @@ public class ReservationController {
     public ResponseEntity<List<MyReservationResponse>> getReservations(
             @AuthenticationPrincipal LoginUser loginUser
     ) {
-        List<MyReservationResponse> responses = reservationService.getReservations(loginUser.email());
+        List<MyReservationResponse> responses = reservationService.getReservations(loginUser.userId());
         return ResponseEntity.ok(responses);
     }
 
@@ -61,7 +61,7 @@ public class ReservationController {
             @AuthenticationPrincipal LoginUser loginUser,
             @PathVariable(required = false) Long id
     ) {
-        MyReservationDetailResponse response = reservationService.getReservation(loginUser.email(), id);
+        MyReservationDetailResponse response = reservationService.getReservation(loginUser.userId(), id);
         return ResponseEntity.ok(response);
     }
 
@@ -70,7 +70,7 @@ public class ReservationController {
             @AuthenticationPrincipal LoginUser loginUser,
             @PathVariable(required = false) Long id
     ) {
-        MyReservationDetailResponse response = reservationService.extendReservation(loginUser.email(), id);
+        MyReservationDetailResponse response = reservationService.extendReservation(loginUser.userId(), id);
         return ResponseEntity.ok(response);
     }
 
@@ -79,7 +79,7 @@ public class ReservationController {
             @AuthenticationPrincipal LoginUser loginUser,
             @PathVariable(required = false) Long id
     ) {
-        reservationService.cancelReservation(loginUser.email(), id);
+        reservationService.cancelReservation(loginUser.userId(), id);
         return ResponseEntity.noContent().build();
     }
 }

@@ -4,19 +4,15 @@
 ### 1-1. 로그인
 - **request**
 ```json
-POST /login
+GET /login/github
 Content-Type: application/json
-        
-{
-  "email": "duei@email.com",
-  "password": "pass1"
-}
 ```
 
 - **response**
 ```json
-HTTP/1.1 200 OK
+HTTP/1.1 302 FOUND
 Content-Type: application/json
+Location: http://localhost:8080
 Set-Cookie: token=eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxIiwibmFtZSI6ImFkbWluIiwicm9sZSI6IkFETUlOIn0.cwnHsltFeEtOzMHs2Q5-ItawgvBZ140OyWecppNlLoI; Path=/; HttpOnly
 ```
 
@@ -34,7 +30,7 @@ HTTP/1.1 200 OK
 Content-Type: application/json
 
 {
-  "email": "brown@email.com",
+  "userId": "brown",
   "name": "브라운",
   "role": "COACH"
 }

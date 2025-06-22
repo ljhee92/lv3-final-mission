@@ -1,16 +1,17 @@
 package finalmission.presentation;
 
 import finalmission.application.AuthService;
-import finalmission.dto.request.LoginRequest;
 import finalmission.dto.request.LoginUser;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
-import jakarta.validation.Valid;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.net.URI;
 
 @RestController
 public class AuthController {
@@ -21,18 +22,27 @@ public class AuthController {
         this.authService = authService;
     }
 
-    @PostMapping("/login")
-    public ResponseEntity<Void> login(
-            @RequestBody @Valid LoginRequest request,
-            HttpServletResponse response
-    ) {
-        String token = authService.login(request);
-        createSession(token, response);
-        return ResponseEntity.ok()
+    @GetMapping("/login/github")
+    public ResponseEntity<Void> redirectToGithub() {
+        String authorizeUrl = authService.getAuthorizeUrl();
+        return ResponseEntity.status(HttpStatus.FOUND)
+                .location(URI.create(authorizeUrl))
                 .build();
     }
 
-    private void createSession(String token, HttpServletResponse response) {
+    @GetMapping("/login/github/callback")
+    public ResponseEntity<Void> getAccessToken(
+            @RequestParam String code,
+            HttpServletResponse response
+    ) {
+        String token = authService.login(code);
+        createCookie(response, token);
+        return ResponseEntity.status(HttpStatus.FOUND)
+                .location(URI.create("http://localhost:8080"))
+                .build();
+    }
+
+    private void createCookie(HttpServletResponse response, String token) {
         Cookie cookie = new Cookie("token", token);
         cookie.setPath("/");
         cookie.setHttpOnly(true);

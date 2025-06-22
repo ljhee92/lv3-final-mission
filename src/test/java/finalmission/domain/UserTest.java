@@ -12,10 +12,9 @@ class UserTest {
     @Test
     void 코치를_생성한다() {
         UserName name = UserName.from("브라운");
-        UserEmail email = UserEmail.from("admin@email.com");
-        UserPassword password = UserPassword.from("password");
+        UserId userId = UserId.from("brown");
 
-        User admin = User.createCoach(name, email, password);
+        User admin = User.createCoach(name, userId);
 
         assertThat(admin.getRole()).isEqualTo(Role.COACH);
     }
@@ -23,37 +22,10 @@ class UserTest {
     @Test
     void 크루를_생성한다() {
         UserName name = UserName.from("듀이");
-        UserEmail email = UserEmail.from("duei@email.com");
-        UserPassword password = UserPassword.from("password");
+        UserId userId = UserId.from("duei");
 
-        User crew = User.createCrew(name, email, password);
+        User crew = User.createCrew(name, userId);
 
         assertThat(crew.getRole()).isEqualTo(Role.CREW);
-    }
-
-    @Test
-    void 비밀번호가_같으면_true를_반환한다() {
-        UserName name = UserName.from("듀이");
-        UserEmail email = UserEmail.from("duei@email.com");
-        UserPassword password = UserPassword.from("password");
-
-        User crew = User.createCrew(name, email, password);
-
-        UserPassword samePassword = UserPassword.from("password");
-
-        assertThat(crew.isSamePassword(samePassword)).isTrue();
-    }
-
-    @Test
-    void 비밀번호가_다르면_false를_반환한다() {
-        UserName name = UserName.from("듀이");
-        UserEmail email = UserEmail.from("duei@email.com");
-        UserPassword password = UserPassword.from("password");
-
-        User crew = User.createCrew(name, email, password);
-
-        UserPassword differentPassword = UserPassword.from("password2");
-
-        assertThat(crew.isSamePassword(differentPassword)).isFalse();
     }
 }

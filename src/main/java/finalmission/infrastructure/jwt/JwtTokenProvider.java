@@ -36,7 +36,7 @@ public class JwtTokenProvider {
         Date expireDate = new Date(now.getTime() + validityInMilliseconds);
 
         return Jwts.builder()
-                .setSubject(loginUser.email())
+                .setSubject(loginUser.userId())
                 .claim("role", loginUser.role())
                 .setIssuedAt(now)
                 .setExpiration(expireDate)
@@ -44,8 +44,7 @@ public class JwtTokenProvider {
                 .compact();
     }
 
-    public String getEmailFromToken(String token) {
-        System.out.println(token);
+    public String getUserIdFromToken(String token) {
         return Jwts.parserBuilder()
                 .setSigningKey(secretKey)
                 .build()

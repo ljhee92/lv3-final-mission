@@ -40,8 +40,8 @@ public class ReservationService {
     }
 
     @Transactional
-    public ReservationCreateResponse reserveBook(String email, ReservationCreateRequest request) {
-        User user = userService.findByEmail(email);
+    public ReservationCreateResponse reserveBook(String userId, ReservationCreateRequest request) {
+        User user = userService.findByUserId(userId);
         Book book = bookService.findById(request.bookId());
         book.checkAvailableCount();
 
@@ -51,16 +51,16 @@ public class ReservationService {
         return ReservationCreateResponse.from(reservationWithId);
     }
 
-    public List<MyReservationResponse> getReservations(String email) {
-        User user = userService.findByEmail(email);
+    public List<MyReservationResponse> getReservations(String userId) {
+        User user = userService.findByUserId(userId);
         List<Reservation> reservations = reservationRepository.findByUser_Id(user.getId());
         return reservations.stream()
                 .map(MyReservationResponse::from)
                 .toList();
     }
 
-    public MyReservationDetailResponse getReservation(String email, Long reservationId) {
-        User user = userService.findByEmail(email);
+    public MyReservationDetailResponse getReservation(String userId, Long reservationId) {
+        User user = userService.findByUserId(userId);
         Reservation reservation = findById(reservationId);
         validateUserOfReservation(reservation, user);
         return MyReservationDetailResponse.from(reservation);
@@ -78,8 +78,8 @@ public class ReservationService {
     }
 
     @Transactional
-    public MyReservationDetailResponse extendReservation(String email, Long reservationId) {
-        User user = userService.findByEmail(email);
+    public MyReservationDetailResponse extendReservation(String userId, Long reservationId) {
+        User user = userService.findByUserId(userId);
         Reservation reservation = findById(reservationId);
         validateUserOfReservation(reservation, user);
         reservation.extendReturnDate();
@@ -87,8 +87,8 @@ public class ReservationService {
     }
 
     @Transactional
-    public void cancelReservation(String email, Long reservationId) {
-        User user = userService.findByEmail(email);
+    public void cancelReservation(String userId, Long reservationId) {
+        User user = userService.findByUserId(userId);
         Reservation reservation = findById(reservationId);
         validateUserOfReservation(reservation, user);
         reservationRepository.delete(reservation);

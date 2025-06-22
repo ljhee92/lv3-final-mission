@@ -30,37 +30,26 @@ public class User {
     private UserName name;
 
     @Embedded
-    private UserEmail email;
-
-    @Embedded
-    private UserPassword password;
+    private UserId userId;
 
     @Enumerated(EnumType.STRING)
     @Getter
     private Role role;
 
-    public static User createCoach(UserName name, UserEmail email, UserPassword password) {
-        return new User(null, name, email, password, Role.COACH);
+    public static User createCoach(UserName name, UserId userId) {
+        return new User(null, name, userId, Role.COACH);
     }
 
-    public static User createCrew(UserName name, UserEmail email, UserPassword password) {
-        return new User(null, name, email, password, Role.CREW);
-    }
-
-    public boolean isSamePassword(UserPassword password) {
-        return password.equals(this.password);
+    public static User createCrew(UserName name, UserId userId) {
+        return new User(null, name, userId, Role.CREW);
     }
 
     public String getName() {
         return name.getName();
     }
 
-    public String getEmail() {
-        return email.getEmail();
-    }
-
-    public String getPassword() {
-        return password.getPassword();
+    public String getUserId() {
+        return userId.getUserId();
     }
 
     @Override
@@ -68,8 +57,7 @@ public class User {
         return "User{" +
                 "id=" + id +
                 ", name=" + name +
-                ", email=" + email +
-                ", password=" + password +
+                ", userId=" + userId +
                 ", role=" + role +
                 '}';
     }
@@ -81,11 +69,11 @@ public class User {
         if (id != null && user.id != null) {
             return Objects.equals(id, user.id);
         }
-        return Objects.equals(email, user.email);
+        return Objects.equals(userId, user.userId);
     }
 
     @Override
     public int hashCode() {
-        return id != null ? Objects.hashCode(id) : Objects.hashCode(email);
+        return id != null ? Objects.hashCode(id) : Objects.hashCode(userId);
     }
 }

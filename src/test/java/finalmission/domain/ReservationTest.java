@@ -15,9 +15,8 @@ class ReservationTest {
     @Test
     void 현재날짜_이전으로_예약을_생성하면_예외가_발생한다() {
         UserName name = UserName.from("듀이");
-        UserEmail email = UserEmail.from("duei@email.com");
-        UserPassword password = UserPassword.from("password");
-        User crew = User.createCrew(name, email, password);
+        UserId userId = UserId.from("duei");
+        User crew = User.createCrew(name, userId);
 
         String title = "오브젝트";
         String author = "조영호";
@@ -39,9 +38,8 @@ class ReservationTest {
     @Test
     void 예약의_사용자와_동일한_사용자면_true를_반환한다() {
         UserName name = UserName.from("듀이");
-        UserEmail email = UserEmail.from("duei@email.com");
-        UserPassword password = UserPassword.from("password");
-        User crew = User.createCrew(name, email, password);
+        UserId userId = UserId.from("duei");
+        User crew = User.createCrew(name, userId);
 
         String title = "오브젝트";
         String author = "조영호";
@@ -64,13 +62,12 @@ class ReservationTest {
     @Test
     void 예약의_사용자와_동일한_사용자가_아니면_false를_반환한다() {
         UserName name = UserName.from("듀이");
-        UserEmail email = UserEmail.from("duei@email.com");
-        UserPassword password = UserPassword.from("password");
-        User duei = User.createCrew(name, email, password);
+        UserId userId = UserId.from("duei");
+        User duei = User.createCrew(name, userId);
 
         UserName anotherName = UserName.from("브라운");
-        UserEmail anotherEmail = UserEmail.from("brown@email.com");
-        User brown = User.createCoach(anotherName, anotherEmail, password);
+        UserId anotherUserId = UserId.from("brown");
+        User brown = User.createCoach(anotherName, anotherUserId);
 
         String title = "오브젝트";
         String author = "조영호";
@@ -93,9 +90,8 @@ class ReservationTest {
     @Test
     void 예약의_반납날짜를_연장한다() {
         UserName name = UserName.from("듀이");
-        UserEmail email = UserEmail.from("duei@email.com");
-        UserPassword password = UserPassword.from("password");
-        User crew = User.createCrew(name, email, password);
+        UserId userId = UserId.from("duei");
+        User crew = User.createCrew(name, userId);
 
         String title = "오브젝트";
         String author = "조영호";
