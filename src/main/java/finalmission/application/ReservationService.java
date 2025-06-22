@@ -82,6 +82,9 @@ public class ReservationService {
         User user = userService.findByUserId(userId);
         Reservation reservation = findById(reservationId);
         validateUserOfReservation(reservation, user);
+        if (!reservation.isExtendable()) {
+            throw new IllegalArgumentException("[ERROR] 반납 연장은 1회만 가능합니다.");
+        }
         reservation.extendReturnDate();
         return MyReservationDetailResponse.from(reservation);
     }
@@ -91,6 +94,6 @@ public class ReservationService {
         User user = userService.findByUserId(userId);
         Reservation reservation = findById(reservationId);
         validateUserOfReservation(reservation, user);
-        reservationRepository.delete(reservation);
+        reservation.cancel();
     }
 }

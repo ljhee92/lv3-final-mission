@@ -14,7 +14,9 @@ public record MyReservationDetailResponse(
         LocalDate reserveDate,
 
         @JsonFormat(pattern = "yyyy-MM-dd")
-        LocalDate returnDate
+        LocalDate returnDate,
+
+        String status
 ) {
 
     public static MyReservationDetailResponse from(Reservation reservation) {
@@ -22,7 +24,8 @@ public record MyReservationDetailResponse(
                 reservation.getId(),
                 BookResponse.from(reservation.getBook()),
                 reservation.getReserveDate(),
-                reservation.getReturnDate()
+                reservation.getReturnDate(),
+                reservation.getStatus().getName()
         );
     }
 }

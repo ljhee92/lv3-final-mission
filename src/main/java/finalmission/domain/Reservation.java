@@ -37,9 +37,11 @@ public class Reservation {
 
     private LocalDate returnDate;
 
+    private ReservationStatus status;
+
     public static Reservation createReservation(User user, Book book, LocalDate reserveDate) {
         validateDate(reserveDate);
-        return new Reservation(null, user, book, reserveDate, LocalTime.now(), reserveDate.plusDays(6));
+        return new Reservation(null, user, book, reserveDate, LocalTime.now(), reserveDate.plusDays(6), ReservationStatus.RESERVED);
     }
 
     private static void validateDate(LocalDate reserveDate) {
@@ -54,5 +56,13 @@ public class Reservation {
 
     public void extendReturnDate() {
         this.returnDate = this.returnDate.plusDays(7);
+    }
+
+    public boolean isExtendable() {
+        return this.returnDate.equals(this.reserveDate.plusDays(6));
+    }
+
+    public void cancel() {
+        this.status = ReservationStatus.RETURNED;
     }
 }
