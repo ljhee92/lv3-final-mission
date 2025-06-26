@@ -3,36 +3,21 @@ package finalmission.infrastructure.thirdparty;
 import finalmission.domain.Keyword;
 import finalmission.dto.response.ApiBookResponses;
 import finalmission.exception.NaverApiException;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.PropertySource;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
-import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestClient;
 import org.springframework.web.client.RestClientException;
 
 @Component
-@PropertySource("classpath:secure.properties")
 public class NaverBookApiRestClient implements BookApiRestClient {
 
-    private static final String NAVER_URL = "https://openapi.naver.com";
     private static final String SEARCH_URI = "/v1/search/book.json";
 
     private final RestClient restClient;
 
-    public NaverBookApiRestClient(
-            @Value("${naver.client-id}") String clientId,
-            @Value("${naver.client-secret}") String clientSecret,
-            RestClient.Builder builder
-    ) {
-        this.restClient = builder.baseUrl(NAVER_URL)
-                .defaultHeader("X-Naver-Client-Id", clientId)
-                .defaultHeader("X-Naver-Client-Secret", clientSecret)
-                .defaultHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
-                .defaultHeader(HttpHeaders.ACCEPT, MediaType.APPLICATION_JSON_VALUE)
-                .build();
+    public NaverBookApiRestClient(RestClient restClient) {
+        this.restClient = restClient;
     }
 
     @Override
