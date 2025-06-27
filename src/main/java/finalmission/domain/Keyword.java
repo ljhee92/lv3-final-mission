@@ -1,6 +1,6 @@
 package finalmission.domain;
 
-import finalmission.exception.NaverApiException;
+import finalmission.exception.ApiException;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -21,7 +21,7 @@ public class Keyword {
 
     private static void validateEmpty(String keyword) {
         if (keyword == null || keyword.isBlank()) {
-            throw new NaverApiException("[ERROR] 검색 키워드는 빈 값일 수 없습니다.", HttpStatus.BAD_REQUEST);
+            throw new ApiException("[ERROR] 검색 키워드는 빈 값일 수 없습니다.", HttpStatus.BAD_REQUEST);
         }
     }
 }

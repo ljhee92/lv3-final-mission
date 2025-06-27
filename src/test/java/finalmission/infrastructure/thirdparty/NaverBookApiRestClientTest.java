@@ -1,15 +1,17 @@
 package finalmission.infrastructure.thirdparty;
 
-import finalmission.config.TestApiConfig;
 import finalmission.domain.Keyword;
 import finalmission.dto.response.ApiBookResponses;
-import finalmission.exception.NaverApiException;
+import finalmission.exception.ApiException;
+import org.junit.jupiter.api.DisplayNameGeneration;
+import org.junit.jupiter.api.DisplayNameGenerator;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.client.RestClientTest;
-import org.springframework.context.annotation.Import;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.web.client.MockRestServiceServer;
 import org.springframework.web.client.ResourceAccessException;
 import org.springframework.web.client.RestClientException;
@@ -26,7 +28,11 @@ import static org.springframework.test.web.client.match.MockRestRequestMatchers.
 import static org.springframework.test.web.client.response.MockRestResponseCreators.*;
 
 @RestClientTest(NaverBookApiRestClient.class)
-@Import(TestApiConfig.class)
+@TestPropertySource(properties = {
+        "naver.client-id=test-client-id",
+        "naver.client-secret=test-client-secret"
+})
+@DisplayNameGeneration(DisplayNameGenerator.ReplaceUnderscores.class)
 class NaverBookApiRestClientTest {
 
     @Autowired
@@ -39,20 +45,24 @@ class NaverBookApiRestClientTest {
     void 도서_검색결과를_반환한다() {
         String keyword = "오브젝트";
         String encodedKeyWord = URLEncoder.encode(keyword, StandardCharsets.UTF_8);
-        String responseBody = "{\"items\":[]}";
+        String responseBody = """
+            {
+                "items": []
+            }
+        """;
 
         server.expect(once(), requestTo(startsWith("https://openapi.naver.com/v1/search/book.json")))
                 .andExpect(queryParam("query", encodedKeyWord))
-                .andExpect(method(org.springframework.http.HttpMethod.GET))
+                .andExpect(method(HttpMethod.GET))
                 .andExpect(header("X-Naver-Client-Id", "test-client-id"))
                 .andExpect(header("X-Naver-Client-Secret", "test-client-secret"))
                 .andRespond(withSuccess(responseBody, MediaType.APPLICATION_JSON));
 
-        ApiBookResponses result = naverBookApiRestClient.searchBooks(Keyword.from(keyword));
+        ApiBookResponses responses = naverBookApiRestClient.searchBooks(Keyword.from(keyword));
 
         assertAll(
-                () -> assertThat(result).isNotNull(),
-                () -> assertThat(result.items()).isEmpty()
+                () -> assertThat(responses).isNotNull(),
+                () -> assertThat(responses.items()).isEmpty()
         );
     }
 
@@ -66,9 +76,9 @@ class NaverBookApiRestClientTest {
                 .andRespond(withStatus(HttpStatus.UNAUTHORIZED));
 
         assertThatThrownBy(() -> naverBookApiRestClient.searchBooks(Keyword.from(keyword)))
-                .isInstanceOf(NaverApiException.class)
+                .isInstanceOf(ApiException.class)
                 .satisfies(e -> {
-                    NaverApiException ex = (NaverApiException) e;
+                    ApiException ex = (ApiException) e;
                     assertThat(ex.getStatusCode()).isEqualTo(HttpStatus.INTERNAL_SERVER_ERROR);
                 });
     }
@@ -83,9 +93,9 @@ class NaverBookApiRestClientTest {
                 .andRespond(withServerError());
 
         assertThatThrownBy(() -> naverBookApiRestClient.searchBooks(Keyword.from(keyword)))
-                .isInstanceOf(NaverApiException.class)
+                .isInstanceOf(ApiException.class)
                 .satisfies(e -> {
-                    NaverApiException ex = (NaverApiException) e;
+                    ApiException ex = (ApiException) e;
                     assertThat(ex.getStatusCode()).isEqualTo(HttpStatus.INTERNAL_SERVER_ERROR);
                 });
     }
@@ -102,9 +112,9 @@ class NaverBookApiRestClientTest {
                 });
 
         assertThatThrownBy(() -> naverBookApiRestClient.searchBooks(Keyword.from(keyword)))
-                .isInstanceOf(NaverApiException.class)
+                .isInstanceOf(ApiException.class)
                 .satisfies(e -> {
-                    NaverApiException ex = (NaverApiException) e;
+                    ApiException ex = (ApiException) e;
                     assertThat(ex.getStatusCode()).isEqualTo(HttpStatus.SERVICE_UNAVAILABLE);
                 });
     }
@@ -121,9 +131,9 @@ class NaverBookApiRestClientTest {
                 });
 
         assertThatThrownBy(() -> naverBookApiRestClient.searchBooks(Keyword.from(keyword)))
-                .isInstanceOf(NaverApiException.class)
+                .isInstanceOf(ApiException.class)
                 .satisfies(e -> {
-                    NaverApiException ex = (NaverApiException) e;
+                    ApiException ex = (ApiException) e;
                     assertThat(ex.getStatusCode()).isEqualTo(HttpStatus.SERVICE_UNAVAILABLE);
                 });
     }

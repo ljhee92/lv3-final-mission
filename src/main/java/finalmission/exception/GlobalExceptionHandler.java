@@ -47,7 +47,7 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler
-    public ResponseEntity<ErrorResponse> handleNaverApiException(NaverApiException e) {
+    public ResponseEntity<ErrorResponse> handleNaverApiException(ApiException e) {
         HttpStatusCode statusCode = e.getStatusCode();
         HttpStatus status = HttpStatus.valueOf(statusCode.value());
         String message = e.getMessage();

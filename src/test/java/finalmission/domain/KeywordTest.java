@@ -1,6 +1,6 @@
 package finalmission.domain;
 
-import finalmission.exception.NaverApiException;
+import finalmission.exception.ApiException;
 import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.DisplayNameGenerator;
 import org.junit.jupiter.api.Test;
@@ -18,14 +18,14 @@ class KeywordTest {
         String keyword = null;
 
         assertThatThrownBy(() -> Keyword.from(keyword))
-                .isInstanceOf(NaverApiException.class);
+                .isInstanceOf(ApiException.class);
     }
 
     @ParameterizedTest
     @ValueSource(strings = {"", " "})
     void 키워드가_빈값이면_예외가_발생한다(String keyword) {
         assertThatThrownBy(() -> Keyword.from(keyword))
-                .isInstanceOf(NaverApiException.class);
+                .isInstanceOf(ApiException.class);
     }
 
     @ParameterizedTest
