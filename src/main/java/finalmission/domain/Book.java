@@ -11,6 +11,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
+import java.util.Objects;
 
 @Entity
 @Getter
@@ -76,19 +77,17 @@ public class Book {
     }
 
     @Override
-    public String toString() {
-        return "Book{" +
-                "id=" + id +
-                ", title='" + title + '\'' +
-                ", author='" + author + '\'' +
-                ", image='" + image + '\'' +
-                ", publisher='" + publisher + '\'' +
-                ", pubdate=" + pubdate +
-                ", isbn='" + isbn + '\'' +
-                ", description='" + description + '\'' +
-                ", totalCount=" + totalCount +
-                ", availableCount=" + availableCount +
-                ", regDate=" + regDate +
-                '}';
+    public boolean equals(final Object o) {
+        if (o == null || getClass() != o.getClass()) return false;
+        Book book = (Book) o;
+        if (id != null && book.isbn != null) {
+            return Objects.equals(id, book.id);
+        }
+        return Objects.equals(isbn, book.isbn);
+    }
+
+    @Override
+    public int hashCode() {
+        return id != null ? Objects.hashCode(id) : Objects.hashCode(isbn);
     }
 }

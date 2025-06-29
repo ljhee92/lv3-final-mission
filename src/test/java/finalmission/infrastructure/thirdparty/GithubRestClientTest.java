@@ -54,7 +54,6 @@ class GithubRestClientTest {
                 .andRespond(withSuccess(responseBody, MediaType.APPLICATION_JSON));
 
         TokenResponse response = githubRestClient.getAccessToken(testCode);
-        System.out.println(response);
 
         assertAll(
                 () -> assertThat(response).isNotNull(),

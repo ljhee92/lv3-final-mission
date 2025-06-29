@@ -38,13 +38,7 @@ public class BookService {
 
     @Transactional
     public BookCreateResponse registerBook(BookCreateRequest request) {
-        Book bookWithoutId = createBook(request);
-        Book bookWithId = bookRepository.save(bookWithoutId);
-        return BookCreateResponse.from(bookWithId);
-    }
-
-    private Book createBook(BookCreateRequest request) {
-        return Book.createBook(
+        Book bookWithoutId = Book.createBook(
                 request.title(),
                 request.author(),
                 request.image(),
@@ -55,6 +49,8 @@ public class BookService {
                 request.totalCount(),
                 request.regDate()
         );
+        Book bookWithId = bookRepository.save(bookWithoutId);
+        return BookCreateResponse.from(bookWithId);
     }
 
     public List<Book> findAll() {
