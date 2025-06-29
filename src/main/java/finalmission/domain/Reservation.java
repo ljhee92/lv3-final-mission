@@ -7,18 +7,15 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToOne;
 import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.LocalTime;
 
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@AllArgsConstructor(access = AccessLevel.PRIVATE)
 public class Reservation {
 
     @Id
@@ -39,12 +36,21 @@ public class Reservation {
 
     private ReservationStatus status;
 
-    public static Reservation createReservation(User user, Book book, LocalDate reserveDate) {
+    private Reservation(User user, Book book, LocalDate reserveDate) {
         validateDate(reserveDate);
-        return new Reservation(null, user, book, reserveDate, LocalTime.now(), reserveDate.plusDays(6), ReservationStatus.RESERVED);
+        this.user = user;
+        this.book = book;
+        this.reserveDate = reserveDate;
+        this.reserveTime = LocalTime.now();
+        this.returnDate = reserveDate.plusDays(6);
+        this.status = ReservationStatus.RESERVED;
     }
 
-    private static void validateDate(LocalDate reserveDate) {
+    public static Reservation createReservation(User user, Book book, LocalDate reserveDate) {
+        return new Reservation(user, book, reserveDate);
+    }
+
+    private void validateDate(LocalDate reserveDate) {
         if (reserveDate.isBefore(LocalDate.now())) {
             throw new IllegalArgumentException("[ERROR] 예약은 현재 날짜 이후만 가능합니다.");
         }

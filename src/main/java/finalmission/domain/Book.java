@@ -6,7 +6,6 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.validation.constraints.Size;
 import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -16,7 +15,6 @@ import java.util.Objects;
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@AllArgsConstructor(access = AccessLevel.PRIVATE)
 public class Book {
 
     private final static int MIN_TOTAL_COUNT = 1;
@@ -47,20 +45,34 @@ public class Book {
 
     private LocalDate regDate;
 
-    public static Book createBook(String title, String author, String image, String publisher, LocalDate pubdate,
-                                  String isbn, String description, int totalCount, LocalDate regDate) {
+    private Book(String title, String author, String image, String publisher, LocalDate pubdate,
+                 String isbn, String description, int totalCount, LocalDate regDate) {
         validateTotalCount(totalCount);
         validateRegDate(regDate);
-        return new Book(null, title, author, image, publisher, pubdate, isbn, description, totalCount, totalCount, regDate);
+        this.title = title;
+        this.author = author;
+        this.image = image;
+        this.publisher = publisher;
+        this.pubdate = pubdate;
+        this.isbn = isbn;
+        this.description = description;
+        this.totalCount = totalCount;
+        this.availableCount = totalCount;
+        this.regDate = regDate;
     }
 
-    private static void validateTotalCount(int totalCount) {
+    public static Book createBook(String title, String author, String image, String publisher, LocalDate pubdate,
+                                  String isbn, String description, int totalCount, LocalDate regDate) {
+        return new Book(title, author, image, publisher, pubdate, isbn, description, totalCount, regDate);
+    }
+
+    private void validateTotalCount(int totalCount) {
         if (totalCount < MIN_TOTAL_COUNT) {
             throw new IllegalArgumentException("[ERROR] 등록할 책의 총 수량은 1 이상이어야 합니다.");
         }
     }
 
-    private static void validateRegDate(LocalDate regDate) {
+    private void validateRegDate(LocalDate regDate) {
         if (regDate.isBefore(LocalDate.now())) {
             throw new IllegalArgumentException("[ERROR] 등록일자는 현재시간 이후여야 합니다.");
         }
