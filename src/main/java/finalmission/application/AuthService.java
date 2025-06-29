@@ -2,8 +2,6 @@ package finalmission.application;
 
 import finalmission.domain.Role;
 import finalmission.domain.User;
-import finalmission.domain.UserId;
-import finalmission.domain.UserName;
 import finalmission.dto.request.LoginUser;
 import finalmission.dto.response.GithubUserResponse;
 import finalmission.exception.AuthException;
@@ -35,7 +33,7 @@ public class AuthService {
     public String login(String code) {
         String accessToken = createAccessToken(code);
         GithubUserResponse response = githubRestClient.getUser(accessToken);
-        User user = findUser(response);
+        User user = userService.findOrCreateUser(response);
         LoginUser loginUser = new LoginUser(user.getUserId(), user.getName(), user.getRole());
         return jwtTokenProvider.createToken(loginUser);
     }
@@ -43,16 +41,6 @@ public class AuthService {
     private String createAccessToken(String code) {
         return githubRestClient.getAccessToken(code)
                 .accessToken();
-    }
-
-    private User findUser(GithubUserResponse response) {
-        String name = response.name();
-        String id = response.login();
-        if (!userService.existsByUserId(id)) {
-            User userWithoutId = User.createCrew(UserName.from(name), UserId.from(id));
-            return userService.save(userWithoutId);
-        }
-        return userService.findByUserId(id);
     }
 
     public LoginUser findLoginUserByToken(String token) {
