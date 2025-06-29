@@ -12,6 +12,7 @@ import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.Objects;
 
 @Entity
 @Getter
@@ -70,5 +71,25 @@ public class Reservation {
 
     public void cancel() {
         this.status = ReservationStatus.RETURNED;
+    }
+
+    @Override
+    public boolean equals(final Object o) {
+        if (o == null || getClass() != o.getClass()) return false;
+        Reservation reservation = (Reservation) o;
+        if (id != null && reservation.id != null) {
+            return Objects.equals(id, reservation.id);
+        }
+        return Objects.equals(user, reservation.user)
+                && Objects.equals(book, reservation.book)
+                && Objects.equals(reserveDate, reservation.reserveDate);
+    }
+
+    @Override
+    public int hashCode() {
+        if (id != null) {
+            return Objects.hashCode(id);
+        }
+        return Objects.hash(user, book, reserveDate);
     }
 }

@@ -92,7 +92,7 @@ public class Book {
     public boolean equals(final Object o) {
         if (o == null || getClass() != o.getClass()) return false;
         Book book = (Book) o;
-        if (id != null && book.isbn != null) {
+        if (id != null && book.id != null) {
             return Objects.equals(id, book.id);
         }
         return Objects.equals(isbn, book.isbn);

@@ -45,6 +45,9 @@ public class ReservationService {
         Book book = bookService.findById(request.bookId());
         book.checkAvailableCount();
 
+        if (reservationRepository.existsByUser_IdAndBook_IdAndReserveDate(user.getId(), book.getId(), request.reserveDate())) {
+            throw new IllegalArgumentException("[ERROR] 이미 예약된 책입니다.");
+        }
         Reservation reservationWithoutId = Reservation.createReservation(user, book, request.reserveDate());
         book.adjustAvailableCount(1);
         Reservation reservationWithId = reservationRepository.save(reservationWithoutId);
