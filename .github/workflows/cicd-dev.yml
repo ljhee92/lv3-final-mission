@@ -50,7 +50,7 @@ jobs:
 
       - name: Docker Image Build & Push
         run: |
-          docker buildx build -f Dockerfile.dev --platform linux/arm64 -t duei/duei:dev --push .
+          docker buildx build -f DockerFile.dev --platform linux/arm64 -t duei/duei:dev --push .
 
   cd:
     needs: ci
@@ -80,7 +80,6 @@ jobs:
 
       - name: Docker Compose Pull & Up
         run: |
-          cd backend
           docker compose -f config/docker-compose-dev.yml pull
           docker compose -f config/docker-compose-dev.yml up -d
           echo "docker compose-dev up"
