@@ -1,0 +1,20 @@
+spring:
+  profiles:
+    active: local
+  config:
+    import:
+      - submodule/jwt.yml
+      - submodule/naver.yml
+      - submodule/github.yml
+
+jwt:
+  secret-key: ${jwt.secret-key}
+  validity: ${jwt.validity}
+
+naver:
+  client-id: ${naver.client-id}
+  client-secret: ${naver.client-secret}
+
+github:
+  client-id: ${github.client-id}
+  client-secret: ${github.client-secret}
