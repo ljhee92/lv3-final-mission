@@ -1,6 +1,8 @@
 package finalmission.domain;
 
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -35,6 +37,7 @@ public class Reservation {
 
     private LocalDate returnDate;
 
+    @Enumerated(EnumType.STRING)
     private ReservationStatus status;
 
     private Reservation(User user, Book book, LocalDate reserveDate) {
