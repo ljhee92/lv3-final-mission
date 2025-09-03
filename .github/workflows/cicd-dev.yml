@@ -54,7 +54,7 @@ jobs:
 
   cd:
     needs: ci
-    runs-on: [self-hosted, dev]
+    runs-on: [self-hosted, duei-dev]
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
