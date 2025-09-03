@@ -1,0 +1,27 @@
+spring:
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: ${database.prod.url}
+    username: ${database.prod.username}
+    password: ${database.prod.password}
+
+  sql:
+    init:
+      mode: never
+      schema-locations:
+      data-locations:
+
+  jpa:
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+    hibernate:
+      ddl-auto: validate
+    defer-datasource-initialization: true
+
+  config:
+    activate:
+      on-profile: prod
+    import:
+      - submodule/database.yml

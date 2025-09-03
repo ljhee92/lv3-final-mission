@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="layout/default :: head">
+</head>
+<body>
+    <header th:replace="layout/default :: header"></header>
+    
+    <main>
+        <div class="container">
+            <h1>내 예약 목록</h1>
+            <div id="reservationListWrapper">
+                <table class="reservation-table">
+                    <thead>
+                        <tr>
+                            <th>예약ID</th>
+                            <th>책제목</th>
+                            <th>저자</th>
+                            <th>출판사</th>
+                            <th>예약일자</th>
+                            <th>반납일자</th>
+                            <th>예약상태</th>
+                        </tr>
+                    </thead>
+                    <tbody id="reservationList">
+                        <!-- 예약 목록 동적 추가 -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </main>
+    
+    <footer th:replace="layout/default :: footer"></footer>
+    
+    <div id="reservationModal" class="modal" style="display:none;">
+        <div class="admin-modal">
+            <div class="modal-header">
+                <h2 class="modal-title">예약 상세 정보</h2>
+            </div>
+            <div class="modal-body">
+                <dl class="book-detail">
+                    <dt>예약ID</dt><dd id="modalReservationId"></dd>
+                    <dt>책 제목</dt><dd id="modalBookTitle"></dd>
+                    <dt>저자</dt><dd id="modalBookAuthor"></dd>
+                    <dt>출판사</dt><dd id="modalBookPublisher"></dd>
+                    <dt>출판일</dt><dd id="modalBookPubdate"></dd>
+                    <dt>ISBN</dt><dd id="modalBookIsbn"></dd>
+                    <dt>설명</dt><dd id="modalBookDescription"></dd>
+                    <dt>예약일자</dt><dd id="modalReserveDate"></dd>
+                    <dt>반납일자</dt><dd id="modalReturnDate"></dd>
+                    <dt>예약상태</dt><dd id="modalStatus"></dd>
+                </dl>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-primary" id="extendReservationBtn">반납 연장</button>
+                <button class="btn btn-danger" id="deleteReservationBtn">반납</button>
+                <button class="btn btn-secondary" onclick="closeReservationModal()">닫기</button>
+            </div>
+        </div>
+    </div>
+    
+    <script th:src="@{/js/reservations.js}"></script>
+    <script th:src="@{/js/login.js}"></script>
+</body>
+</html>

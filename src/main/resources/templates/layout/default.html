@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head th:fragment="head">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>도서 예약 시스템</title>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/css/common.css">
+</head>
+<body>
+    <header th:fragment="header" class="header">
+        <div class="container">
+            <div class="header-content">
+                <a href="/" class="header-title">📖 도서 예약 시스템</a>
+                <nav class="header-nav">
+                    <button class="hamburger" id="hamburgerBtn" aria-label="메뉴 열기" type="button">&#9776;</button>
+                    <div class="nav-right" id="navRight"></div>
+                </nav>
+            </div>
+        </div>
+    </header>
+
+    <footer th:fragment="footer" class="footer">
+        <div class="container">
+            <div class="footer-content">
+                © 2025 도서 예약 시스템. All rights reserved.
+            </div>
+        </div>
+    </footer>
+
+    <script th:src="@{/js/login.js}"></script>
+</body>
+</html>

@@ -1,0 +1,22 @@
+version: '3.8'
+
+services:
+  dev:
+    container_name: dev
+    build:
+      context: ..
+      dockerfile: ../Dockerfile.dev
+      args:
+        JAR_FILE: /build/libs/*.jar
+    image: ljhee92sist/duei:dev
+    ports:
+      - "80:8080"
+    environment:
+      - SPRING_PROFILES_ACTIVE=dev
+    restart: always
+    networks:
+      - dev_network
+
+networks:
+  dev_network:
+    external: true

@@ -1,0 +1,35 @@
+spring:
+  application:
+    name: lv2-final-mission
+
+  h2:
+    console:
+      enabled: true
+      path: /h2-console
+
+  datasource:
+    url: jdbc:h2:mem:database
+
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
+    properties:
+      hibernate:
+        format_sql: true
+        show_sql: true
+    defer-datasource-initialization: true
+
+  sql:
+    init:
+      mode: always
+      data-locations: classpath:data.sql
+      schema-locations:
+
+  http:
+    client:
+      connect-timeout: 3s
+      read-timeout: 5s
+
+  config:
+    activate:
+      on-profile: local

@@ -1,0 +1,11 @@
+version: '3.8'
+
+services:
+  prod:
+    container_name: "prod_${ENV_ID}"
+    image: ljhee92sist/duei:prod
+    ports:
+      - "80:8080"
+    environment:
+      - SPRING_PROFILES_ACTIVE=prod
+    restart: always

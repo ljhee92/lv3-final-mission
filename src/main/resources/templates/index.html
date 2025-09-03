@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="layout/default :: head">
+</head>
+<body>
+    <header th:replace="layout/default :: header"></header>
+
+    <main class="main">
+        <div class="container">
+            <div class="page-header">
+                <h1 class="main-title">📚 예약 가능 도서 목록</h1>
+                <p class="sub-title">원하는 도서를 선택하여 예약해보세요</p>
+            </div>
+
+            <div class="book-list" id="bookList">
+                <!-- 도서 목록 동적 추가 -->
+            </div>
+
+            <div class="no-books" id="noBooks" style="display: none;">
+                현재 예약 가능한 도서가 없습니다.
+            </div>
+        </div>
+    </main>
+
+    <div class="modal" id="bookModal">
+        <div class="book-modal">
+            <div class="modal-header">
+                <h2 class="modal-title">도서 상세 정보</h2>
+            </div>
+            <div class="modal-body">
+                <dl class="book-detail">
+                    <dt>제목</dt>
+                    <dd id="modalTitle"></dd>
+                    <dt>저자</dt>
+                    <dd id="modalAuthor"></dd>
+                    <dt>출판사</dt>
+                    <dd id="modalPublisher"></dd>
+                    <dt>ISBN</dt>
+                    <dd id="modalIsbn"></dd>
+                    <dt>설명</dt>
+                    <dd id="modalDescription"></dd>
+                    <dt>대여 가능 수량</dt>
+                    <dd id="modalAvailableCount"></dd>
+                </dl>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" onclick="closeModal()">닫기</button>
+                <button class="btn btn-primary" id="reserveButton" onclick="reserveBook()">예약하기</button>
+            </div>
+        </div>
+    </div>
+
+    <footer th:replace="layout/default :: footer"></footer>
+
+    <script th:src="@{/js/login.js}"></script>
+    <script th:src="@{/js/books.js}"></script>
+</body>
+</html>
