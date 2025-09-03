@@ -19,3 +19,4 @@ github:
   client-id: ${github.client-id}
   client-secret: ${github.client-secret}
   redirect-uri: ${github.redirect-uri}
+  home-uri: ${github.home-uri}

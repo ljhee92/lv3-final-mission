@@ -4,6 +4,7 @@ import finalmission.application.AuthService;
 import finalmission.dto.request.LoginUser;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -17,6 +18,9 @@ import java.net.URI;
 public class AuthController {
 
     private final AuthService authService;
+
+    @Value("${github.home-uri}")
+    private String homeUri;
 
     public AuthController(AuthService authService) {
         this.authService = authService;
@@ -38,7 +42,7 @@ public class AuthController {
         String token = authService.login(code);
         createCookie(response, token);
         return ResponseEntity.status(HttpStatus.FOUND)
-                .location(URI.create("http://localhost:8080"))
+                .location(URI.create(homeUri))
                 .build();
     }
 
