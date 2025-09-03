@@ -50,7 +50,7 @@ jobs:
 
       - name: Docker Image Build & Push
         run: |
-          docker buildx build -f DockerFile.dev --platform linux/arm64 -t duei/duei:dev --push .
+          docker buildx build -f DockerFile.dev --platform linux/arm64 -t ljhee92sist/duei:dev --push .
 
   cd:
     needs: ci
