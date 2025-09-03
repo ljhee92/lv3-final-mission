@@ -10,7 +10,6 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestClient;
 
 @Component
-@PropertySource("classpath:secure.properties")
 public class NaverBookApiRestClient implements BookApiRestClient {
 
     private static final String NAVER_URL = "https://openapi.naver.com";

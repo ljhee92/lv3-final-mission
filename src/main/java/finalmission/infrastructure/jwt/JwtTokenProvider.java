@@ -17,7 +17,6 @@ import java.nio.charset.StandardCharsets;
 import java.util.Date;
 
 @Component
-@PropertySource("classpath:secure.properties")
 public class JwtTokenProvider {
 
     private final SecretKey secretKey;

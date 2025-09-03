@@ -12,7 +12,6 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestClient;
 
 @Component
-@PropertySource("classpath:secure.properties")
 public class GithubRestClient {
 
     private static final String GITHUB_LOGIN_URL = "https://github.com/login/oauth";

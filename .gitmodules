@@ -1,0 +1,6 @@
+[submodule "resources/submodule"]
+	path = resources/submodule
+	url = https://github.com/ljhee92/lv2-final-mission-sub
+[submodule "src/main/resources/submodule"]
+	path = src/main/resources/submodule
+	url = https://github.com/ljhee92/lv2-final-mission-sub
