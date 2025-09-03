@@ -5,7 +5,7 @@ spring:
     import:
       - submodule/jwt.yml
       - submodule/naver.yml
-      - submodule/github.yml
+      - submodule/github-${spring.profiles.active}.yml
 
 jwt:
   secret-key: ${jwt.secret-key}
@@ -18,3 +18,4 @@ naver:
 github:
   client-id: ${github.client-id}
   client-secret: ${github.client-secret}
+  redirect-uri: ${github.redirect-uri}
