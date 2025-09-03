@@ -8,7 +8,7 @@ services:
       dockerfile: ../Dockerfile.dev
       args:
         JAR_FILE: /build/libs/*.jar
-    image: duei/duei:dev
+    image: ljhee92sist/duei:dev
     ports:
       - "80:8080"
     environment:
