@@ -8,8 +8,8 @@ spring:
   sql:
     init:
       mode: never
-      schema-locations:
-      data-locations:
+      schema-locations: classpath:schema.sql
+      data-locations: classpath:data.sql
 
   jpa:
     show-sql: true
