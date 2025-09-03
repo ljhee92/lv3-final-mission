@@ -34,13 +34,11 @@ public class NaverBookApiRestClient implements BookApiRestClient {
 
     @Override
     public ApiBookResponses searchBooks(Keyword keyword) {
-        return ApiCallHandler.execute(() -> {
-            return restClient.get()
-                    .uri(uriBuilder -> uriBuilder.path(SEARCH_URI)
-                            .queryParam("query", keyword.getKeyword())
-                            .build())
-                    .retrieve()
-                    .body(ApiBookResponses.class);
-        }, "[ERROR] 네이버 API 통신 중 문제 발생");
+        return ApiCallHandler.execute(() -> restClient.get()
+                .uri(uriBuilder -> uriBuilder.path(SEARCH_URI)
+                        .queryParam("query", keyword.getKeyword())
+                        .build())
+                .retrieve()
+                .body(ApiBookResponses.class), "[ERROR] 네이버 API 통신 중 문제 발생");
     }
 }
