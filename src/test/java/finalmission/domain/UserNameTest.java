@@ -6,6 +6,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatCode;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
@@ -13,18 +14,20 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 class UserNameTest {
 
     @Test
-    void 사용자의_이름이_널이면_예외가_발생한다() {
+    void 사용자의_이름이_널이면_디폴트_이름이_지정된다() {
         String name = null;
 
-        assertThatThrownBy(() -> UserName.from(name))
-                .isInstanceOf(IllegalArgumentException.class);
+        UserName userName = UserName.from(name);
+
+        assertThat(userName.getName()).startsWith("사용자");
     }
 
     @ParameterizedTest
     @ValueSource(strings = {"", " "})
-    void 사용자의_이름이_빈값이면_예외가_발생한다(String name) {
-        assertThatThrownBy(() -> UserName.from(name))
-                .isInstanceOf(IllegalArgumentException.class);
+    void 사용자의_이름이_빈값이면_디폴트_이름이_지정된다(String name) {
+        UserName userName = UserName.from(name);
+
+        assertThat(userName.getName()).startsWith("사용자");
     }
 
     @ParameterizedTest
