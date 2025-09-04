@@ -3,6 +3,7 @@ package finalmission.infrastructure.thirdparty;
 import finalmission.dto.response.GithubUserResponse;
 import finalmission.dto.response.TokenResponse;
 import finalmission.exception.ApiException;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -10,6 +11,7 @@ import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestClient;
 
+@Slf4j
 @Component
 public class GithubRestClient {
 
@@ -35,7 +37,7 @@ public class GithubRestClient {
         this.clientSecret = clientSecret;
         this.redirectUri = redirectUri;
         this.loginRestClient = builder.baseUrl(GITHUB_LOGIN_URL)
-                .defaultHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
+                .defaultHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_FORM_URLENCODED_VALUE)
                 .defaultHeader(HttpHeaders.ACCEPT, MediaType.APPLICATION_JSON_VALUE)
                 .defaultStatusHandler(new GithubErrorHandler())
                 .build();
@@ -64,6 +66,7 @@ public class GithubRestClient {
                     .retrieve()
                     .body(TokenResponse.class);
 
+            log.info(String.valueOf(response));
             if (response.accessToken() == null) {
                 throw new ApiException("[ERROR] 깃허브 액세스 토큰을 받아오는 데 실패했습니다.", HttpStatus.INTERNAL_SERVER_ERROR);
             }
