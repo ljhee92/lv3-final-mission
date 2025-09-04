@@ -54,6 +54,7 @@ async function loadBooks() {
             bookListContainer.innerHTML = `
                 <div class="no-books">
                     <p>로그인 후 이용 가능합니다.</p>
+                    <button class="mobile-login-btn" onclick="location.href='/login/github'">로그인</button>
                 </div>
             `;
             return;
@@ -63,6 +64,7 @@ async function loadBooks() {
         bookListContainer.innerHTML = `
             <div class="no-books">
                 <p>로그인 후 이용 가능합니다.</p>
+                <button class="mobile-login-btn" onclick="location.href='/login/github'">로그인</button>
             </div>
         `;
         return;
